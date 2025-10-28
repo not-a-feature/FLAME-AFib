@@ -102,7 +102,7 @@ class AFibAnalyzer(StarAnalyzer, AFibAnalyzerMixin):
     def analysis_method(
         self,
         data: List[Dict[str, Any]],
-        aggregator_results: Dict[str, Any] | None,
+        aggregator_results: Dict[str, Any] | List[Dict[str, Any]] | None,
     ) -> Dict[str, Any]:
         """Perform one round of federated GLM fitting."""
         self.node_id = self.flame.get_id()
@@ -110,7 +110,15 @@ class AFibAnalyzer(StarAnalyzer, AFibAnalyzerMixin):
         # Load and prepare data (cached after first call)
         self._load_and_prepare_data(data)
 
-        return run_analysis_iteration(self, aggregator_results, self.node_id)
+        # STAR model wraps aggregator results in a list - unwrap it
+        # aggregator_results comes as a list from await_intermediate_data().values()
+        unwrapped_results: Dict[str, Any] | None = None
+        if isinstance(aggregator_results, list) and len(aggregator_results) > 0:
+            unwrapped_results = aggregator_results[0]
+        elif isinstance(aggregator_results, dict):
+            unwrapped_results = aggregator_results
+
+        return run_analysis_iteration(self, unwrapped_results, self.node_id)
 
 
 class AFibAggregator(StarAggregator, AFibAggregatorMixin):
