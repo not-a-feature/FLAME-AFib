@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from typing import Any, Dict, List, Tuple
 
 import numpy as np
@@ -22,12 +23,30 @@ ABSOLUTE_TOLERANCE = 1e-6
 
 
 def load_json_file(filepath: str) -> Dict[str, Any]:
-    """Load JSON file and return as dictionary."""
+    """Load JSON file and return as dictionary.
+
+    Handles common JSON formatting issues:
+    - Trailing commas in objects and arrays
+    - Python-style booleans (True/False -> true/false)
+    - Python-style None -> null
+    """
     if not os.path.exists(filepath):
         raise FileNotFoundError(f"File not found: {filepath}")
 
-    with open(filepath, "r") as f:
-        return json.load(f)
+    with open(filepath, "r", encoding="utf-8") as f:
+        content = f.read()
+
+    # Replace Python-style values with JSON equivalents
+    # Handle booleans (with and without trailing commas/whitespace)
+    content = re.sub(r"\bTrue\b", "true", content)
+    content = re.sub(r"\bFalse\b", "false", content)
+    content = re.sub(r"\bNone\b", "null", content)
+
+    # Remove trailing commas before closing braces/brackets
+    # Pattern: comma followed by optional whitespace and then } or ]
+    content = re.sub(r",(\s*[}\]])", r"\1", content)
+
+    return json.loads(content)
 
 
 def compare_floats(val1: float, val2: float, path: str) -> Tuple[bool, str]:
@@ -174,7 +193,8 @@ def print_summary_comparison(local_data: Dict[str, Any], direct_data: Dict[str, 
 def main():
     """Load and compare results from local and direct analysis."""
 
-    local_path = "output/local.json"
+    # local_path = "output/local.json"
+    local_path = "output/federated.json"
     direct_path = "output/direct.json"
 
     print(f"Local:  {local_path}")
