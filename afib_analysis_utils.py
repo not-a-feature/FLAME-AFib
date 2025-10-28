@@ -564,8 +564,42 @@ def run_aggregation_iteration(
 
     if all_converged:
         print(f"[AGGREGATOR] All models converged - returning formatted final result")
-        # Return the formatted result using get_result()
-        return json.loads(aggregator.get_result())
+        # Return the properly formatted final result with native Python types
+        final_models = {}
+        for name, state in aggregator.model_states.items():
+            if "error" in state:
+                final_models[name] = {
+                    "status": "failed",
+                    "error": state["error"],
+                    "iterations": int(state["iteration"]),
+                }
+            elif "stderr" in state and state["stderr"]:
+                # Convert numpy arrays to Python lists, then to native Python floats
+                coefficients = {
+                    k: float(v) for k, v in zip(state["predictors"], state["beta"])
+                }
+                stderr = {
+                    k: float(v) for k, v in zip(state["predictors"], state["stderr"])
+                }
+                final_models[name] = {
+                    "status": "success",
+                    "coefficients": coefficients,
+                    "stderr": stderr,
+                    "iterations": int(state["iteration"]),
+                    "converged": bool(state.get("converged", False)),
+                }
+            else:
+                final_models[name] = {
+                    "status": "failed",
+                    "error": "Did not converge",
+                    "iterations": int(state["iteration"]),
+                }
+
+        return {
+            "overall_status": "completed",
+            "aggregated_summary": aggregator.summary_stats,
+            "aggregated_models": final_models,
+        }
 
     # Continue iterations - return raw state for next iteration
     return {
