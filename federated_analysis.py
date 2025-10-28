@@ -138,18 +138,13 @@ class AFibAggregator(StarAggregator, AFibAggregatorMixin):
     def has_converged(self, result, last_result, num_iterations):  # type: ignore[no-untyped-def]
         """Check if all models have converged or max iterations reached."""
         if num_iterations >= MAX_ITERATIONS:
-            print(f"[Aggregator] Max iterations ({MAX_ITERATIONS}) reached")
             return True
 
         model_states = result.get("model_states", {})
         if not model_states:
-            print("[Aggregator] No model states found")
-            return True  # Stop if no models are running
+            return True
 
         all_converged = all(state.get("converged", False) for state in model_states.values())
-        if all_converged:
-            print("[Aggregator] All models converged")
-
         return all_converged
 
 

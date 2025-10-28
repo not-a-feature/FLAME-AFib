@@ -38,6 +38,7 @@ def load_json_file(filepath: str) -> Dict[str, Any]:
 
     # Replace Python-style values with JSON equivalents
     # Handle booleans (with and without trailing commas/whitespace)
+    content = re.sub(r"'", '"', content)
     content = re.sub(r"\bTrue\b", "true", content)
     content = re.sub(r"\bFalse\b", "false", content)
     content = re.sub(r"\bNone\b", "null", content)
@@ -193,8 +194,8 @@ def print_summary_comparison(local_data: Dict[str, Any], direct_data: Dict[str, 
 def main():
     """Load and compare results from local and direct analysis."""
 
-    # local_path = "output/local.json"
-    local_path = "output/federated.json"
+    local_path = "output/local.json"
+    # local_path = "output/federated.json"
     direct_path = "output/direct.json"
 
     print(f"Local:  {local_path}")

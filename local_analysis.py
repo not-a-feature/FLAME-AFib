@@ -98,7 +98,6 @@ class AFibAggregator(AFibAggregatorMixin):
 
     def analysis_method(self, analysis_results: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Aggregate results and perform one IRLS update."""
-        print(f"[Aggregator] analysis_method called with {len(analysis_results)} results")
         return run_aggregation_iteration(self, analysis_results)
 
     def has_converged(self, num_iterations: int) -> bool:
@@ -122,43 +121,28 @@ def main():
     aggregator = AFibAggregator()
 
     print(f"\n{'='*60}")
-    print(f"Starting federated AFib analysis")
+    print(f"Federated AFib Analysis ({len(analyzers)} nodes)")
     print(f"{'='*60}")
 
     aggregator_results = None
     num_iterations = 0
 
-    print(f"Initialized {len(analyzers)} analyzers")
-    print(f"Data paths: {node_data_paths}\n")
-
     while not aggregator.has_converged(num_iterations):
         num_iterations += 1
-        print(f"\n{'='*60}")
-        print(f"ITERATION {num_iterations}")
-        print(f"{'='*60}")
-
-        # Pass aggregator results to each analyzer
-        print(f"Running analyzers...")
         analyzer_results = [analyzer.analysis_method(aggregator_results) for analyzer in analyzers]
 
         # Check for errors from analyzers
         for res in analyzer_results:
-            status = res["status"]
-            node_id = res["node_id"]
-            print(f"  {node_id}: status={status}")
-            if status == "error":
-                print(f"  ERROR in {node_id}: {res['error']}")
+            if res["status"] == "error":
+                print(f"ERROR in {res['node_id']}: {res['error']}")
                 if "traceback" in res:
                     print(res["traceback"])
-                # For now we stop, we could implement a retry mechanism later
                 return
 
-        # Aggregate the results
-        print(f"Running aggregator...")
         aggregator_results = aggregator.analysis_method(analyzer_results)
 
         if "error" in aggregator_results:
-            print(f"[ERROR] Aggregator error: {aggregator_results['error']}")
+            print(f"ERROR: {aggregator_results['error']}")
             break
 
     print(f"\n{'='*60}")
@@ -173,7 +157,7 @@ def main():
     output_path = "output/local.json"
     with open(output_path, "w") as f:
         f.write(result_json)
-    print(f"\n[INFO] Results written to {output_path}")
+    print(f"\nResults written to {output_path}")
 
 
 if __name__ == "__main__":

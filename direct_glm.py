@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import json
 import os
-from typing import Dict, List
+from typing import Any, Dict, List
 
 import pandas as pd
 import numpy as np
@@ -52,7 +52,6 @@ class DirectGLMAnalyzer(AFibAnalyzerMixin):
         cohort_dfs = []
         diagnoses_dfs = []
 
-        print(f"Loading data from {len(self.data_paths)} nodes...")
         for path in self.data_paths:
             cohort_path = os.path.join(path, COHORT_KEY)
             diagnoses_path = os.path.join(path, DIAGNOSES_KEY)
@@ -70,20 +69,14 @@ class DirectGLMAnalyzer(AFibAnalyzerMixin):
         self.cohort_df = pd.concat(cohort_dfs, ignore_index=True)
         self.diagnoses_df = pd.concat(diagnoses_dfs, ignore_index=True)
 
-        print(
-            f"Combined data: {len(self.cohort_df)} cohort records, {len(self.diagnoses_df)} diagnosis records"
-        )
-
         # Use the same preprocessing as federated analysis
         self._prepare_analysis_data()
         self._filter_data()
         self._prepare_subcohorts()
 
-        print(f"After preprocessing: {len(self.analysis_df)} records")
-
     def _fit_glm_model(
         self, df: pd.DataFrame, outcome: str, predictors: List[str]
-    ) -> Dict[str, any]:
+    ) -> Dict[str, Any]:
         """Fit a logistic regression model directly using statsmodels."""
         df_model = df.copy()
         df_model["gender"] = df_model["gender_numeric"]
@@ -130,36 +123,32 @@ class DirectGLMAnalyzer(AFibAnalyzerMixin):
                 "error": f"{type(e).__name__}: {str(e)}",
             }
 
-    def fit_all_models(self) -> Dict[str, any]:
+    def fit_all_models(self) -> Dict[str, Any]:
         """Fit all models defined in MODEL_DEFINITIONS."""
         self._load_and_prepare_data()
 
         results = {}
-        print(f"\nFitting {len(MODEL_DEFINITIONS)} models...\n")
+        print(f"Fitting {len(MODEL_DEFINITIONS)} models...")
 
         for name, (outcome, predictors) in MODEL_DEFINITIONS.items():
             subcohort_df = self.subcohorts.get(name)
             if subcohort_df is None or subcohort_df.empty:
-                print(f"[{name}] Skipping: subcohort is empty")
                 results[name] = {
                     "status": "failed",
                     "error": "Subcohort is empty",
                 }
                 continue
 
-            print(f"[{name}] Fitting on {len(subcohort_df)} samples, outcome: {outcome}")
             results[name] = self._fit_glm_model(subcohort_df, outcome, predictors)
 
             if results[name]["status"] == "success":
-                print(
-                    f"[{name}] SUCCESS - iterations: {results[name]['iterations']}, converged: {results[name]['converged']}"
-                )
+                print(f"  {name}: SUCCESS")
             else:
-                print(f"[{name}] FAILED - {results[name]['error']}")
+                print(f"  {name}: FAILED - {results[name]['error']}")
 
         return results
 
-    def get_summary_stats(self) -> Dict[str, any]:
+    def get_summary_stats(self) -> Dict[str, Any]:
         """Get summary statistics for the combined dataset."""
         if self.analysis_df is None:
             raise RuntimeError("Data not loaded")
@@ -179,18 +168,11 @@ def main():
     node_data_paths = ["data/node_1", "data/node_2"]
 
     print(f"\n{'='*60}")
-    print(f"Direct GLM Analysis on Combined AFib Data")
+    print(f"Direct GLM Analysis")
     print(f"{'='*60}\n")
 
     analyzer = DirectGLMAnalyzer(node_data_paths)
-
-    # Fit all models
     model_results = analyzer.fit_all_models()
-
-    # Get summary statistics
-    print(f"\n{'='*60}")
-    print(f"Collecting summary statistics...")
-    print(f"{'='*60}\n")
     summary_stats = analyzer.get_summary_stats()
 
     # Compile final results
@@ -200,10 +182,6 @@ def main():
         "aggregated_models": model_results,
     }
 
-    print(f"\n{'='*60}")
-    print(f"ANALYSIS COMPLETE")
-    print(f"{'='*60}\n")
-
     result_json = json.dumps(final_results, indent=2)
     print(result_json)
 
@@ -212,7 +190,7 @@ def main():
     output_path = "output/direct.json"
     with open(output_path, "w") as f:
         f.write(result_json)
-    print(f"\n[INFO] Results written to {output_path}")
+    print(f"\nResults written to {output_path}")
 
 
 if __name__ == "__main__":

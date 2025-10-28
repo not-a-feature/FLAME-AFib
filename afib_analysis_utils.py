@@ -416,20 +416,14 @@ def run_analysis_iteration(
     if aggregator_results and "iteration" in aggregator_results:
         iteration_num = aggregator_results["iteration"]
 
-    print(f"[ANALYZER {node_id}] Starting iteration {iteration_num + 1}")
-
     try:
         if not analyzer.subcohorts:
-            print(f"[ANALYZER {node_id}] ERROR: No subcohorts available after data preparation")
             return {
                 "node_id": node_id,
                 "status": "error",
                 "error": "Data preparation failed",
             }
 
-        print(f"[ANALYZER {node_id}] Subcohorts available: {list(analyzer.subcohorts.keys())}")
-
-        # Get current betas from aggregator (handle missing key safely)
         model_states = {}
         if aggregator_results and "model_states" in aggregator_results:
             model_states = aggregator_results["model_states"]
@@ -438,22 +432,14 @@ def run_analysis_iteration(
         for name, (outcome, predictors) in MODEL_DEFINITIONS.items():
             subcohort_df = analyzer.subcohorts[name] if name in analyzer.subcohorts else None
             if subcohort_df is None or subcohort_df.empty:
-                print(f"[ANALYZER {node_id}] Skipping {name}: subcohort is empty")
                 continue
-
-            print(f"[ANALYZER {node_id}] Processing {name} with {len(subcohort_df)} samples")
 
             # Get current beta for this model, or initialize with zeros
             if name in model_states and "beta" in model_states[name]:
                 current_beta = np.array(model_states[name]["beta"])
-                print(
-                    f"[ANALYZER {node_id}] {name}: Using beta from aggregator: {current_beta[:3]}..."
-                )
             else:
                 current_beta = np.array([0] * (len(predictors) + 1))
-                print(f"[ANALYZER {node_id}] {name}: Initializing beta with zeros")
 
-            # Calculate parts for next iteration
             result = analyzer._calculate_glm_iteration(
                 subcohort_df, outcome, predictors, current_beta
             )
@@ -478,7 +464,6 @@ def run_analysis_iteration(
         }
 
     except Exception as e:
-        print(f"[ANALYZER {node_id}] ERROR in iteration: {type(e).__name__}: {str(e)}")
         return {
             "node_id": node_id,
             "status": "error",
@@ -503,105 +488,44 @@ def run_aggregation_iteration(
         Dictionary with aggregation results including model_states and summary
     """
     aggregator.iteration += 1
-    print(f"\n[AGGREGATOR] === Iteration {aggregator.iteration} ===")
+    print(f"\n[Iteration {aggregator.iteration}]")
 
     successful_nodes = [r for r in analysis_results if r["status"] == "success"]
-    failed_nodes = [r for r in analysis_results if r["status"] != "success"]
-    print(
-        f"[AGGREGATOR] Results received from {len(successful_nodes)} successful nodes, {len(failed_nodes)} failed"
-    )
-
-    if aggregator.iteration == 1:
-        print(f"[AGGREGATOR] Initializing model states...")
-        aggregator._initialize_model_states(analysis_results)
-        print(f"[AGGREGATOR] Models initialized: {list(aggregator.model_states.keys())}")
-
-        print(f"[AGGREGATOR] Aggregating summary statistics...")
-        aggregator._aggregate_summary_stats(analysis_results)
-        if aggregator.summary_stats:
-            print(
-                f"[AGGREGATOR] Summary stats - Total records: {aggregator.summary_stats.get('total_records')}, Nodes: {aggregator.summary_stats.get('n_nodes')}"
-            )
-
-    successful_results = successful_nodes
-    if not successful_results:
-        print(f"[AGGREGATOR] ERROR: No successful nodes in this iteration")
+    if not successful_nodes:
         return {"error": "No successful nodes in this iteration."}
 
+    if aggregator.iteration == 1:
+        aggregator._initialize_model_states(analysis_results)
+        aggregator._aggregate_summary_stats(analysis_results)
+
     # Aggregate score vectors and info matrices for each model
-    converged_models = []
-    updated_models = []
     for name, state in aggregator.model_states.items():
         if state["converged"]:
-            converged_models.append(name)
             continue
 
         all_iterations = [
             r["iteration_results"][name]
-            for r in successful_results
+            for r in successful_nodes
             if "iteration_results" in r and name in r["iteration_results"]
         ]
 
         if not all_iterations:
-            print(f"[AGGREGATOR] {name}: No iteration data from nodes")
             continue
 
-        print(f"[AGGREGATOR] Updating {name} from {len(all_iterations)} nodes...")
         converged = aggregator._perform_irls_update(name, all_iterations)
         state["iteration"] = aggregator.iteration
-        updated_models.append(name)
         if converged:
-            print(f"[AGGREGATOR] {name}: CONVERGED (deviance: {state['deviance']:.4f})")
-        else:
-            print(f"[AGGREGATOR] {name}: Updated (deviance: {state['deviance']:.4f})")
-
-    print(
-        f"[AGGREGATOR] Status - Updated: {len(updated_models)}, Converged: {len(converged_models)}"
-    )
+            print(f"  {name}: CONVERGED")
 
     # Check if all models have converged
     all_converged = all(state.get("converged", False) for state in aggregator.model_states.values())
 
     if all_converged:
-        print(f"[AGGREGATOR] All models converged - returning formatted final result")
-        # Return the properly formatted final result with native Python types
-        final_models = {}
-        for name, state in aggregator.model_states.items():
-            if "error" in state:
-                final_models[name] = {
-                    "status": "failed",
-                    "error": state["error"],
-                    "iterations": int(state["iteration"]),
-                }
-            elif "stderr" in state and state["stderr"]:
-                # Convert numpy arrays to Python lists, then to native Python floats
-                coefficients = {
-                    k: float(v) for k, v in zip(state["predictors"], state["beta"])
-                }
-                stderr = {
-                    k: float(v) for k, v in zip(state["predictors"], state["stderr"])
-                }
-                final_models[name] = {
-                    "status": "success",
-                    "coefficients": coefficients,
-                    "stderr": stderr,
-                    "iterations": int(state["iteration"]),
-                    "converged": bool(state.get("converged", False)),
-                }
-            else:
-                final_models[name] = {
-                    "status": "failed",
-                    "error": "Did not converge",
-                    "iterations": int(state["iteration"]),
-                }
+        # Parse the JSON string result back to dict for consistency
+        result_json = aggregator.get_result()
+        return json.loads(result_json)
 
-        return {
-            "overall_status": "completed",
-            "aggregated_summary": aggregator.summary_stats,
-            "aggregated_models": final_models,
-        }
-
-    # Continue iterations - return raw state for next iteration
+    # Continue iterations
     return {
         "iteration": aggregator.iteration,
         "model_states": aggregator.model_states,
