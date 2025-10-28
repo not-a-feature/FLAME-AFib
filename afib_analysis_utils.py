@@ -18,7 +18,7 @@ __version__ = "0.0.0"
 
 # Analysis parameters
 MAX_ITERATIONS = 30
-CONVERGENCE_THRESHOLD = 1e-1
+CONVERGENCE_THRESHOLD = 1e-6
 
 
 class AFibAnalyzerMixin:
@@ -122,11 +122,11 @@ class AFibAnalyzerMixin:
         unit_factors = {
             "pg/ml": 1.0,
             "ng/l": 1.0,
-            "pg/dl": 100.0,
-            "pg/100ml": 100.0,
-            "pg%": 100.0,
-            "pg/l": 1000.0,
-            "pmol/l": 0.118,
+            "pg/dl": 0.01,  # 1 dL = 100 mL, so divide by 100
+            "pg/100ml": 0.01,  # Same as pg/dL
+            "pg%": 0.01,  # % means per 100
+            "pg/l": 0.001,  # 1 L = 1000 mL, so divide by 1000
+            "pmol/l": 8.457,  # NT-proBNP MW ≈ 8.457 kDa
         }
         unit_lower = self.analysis_df["NTproBNP.unit"].str.lower()
         valid_mask = unit_lower.isin(unit_factors.keys())
@@ -196,6 +196,10 @@ class AFibAnalyzerMixin:
         # Logit function (inverse of expit)
         eta = X @ beta
         mu = 1 / (1 + np.exp(-eta))
+        
+        # Clip mu to avoid numerical issues in all calculations
+        # This prevents zero weights and log(0) in deviance
+        mu = np.clip(mu, 1e-10, 1 - 1e-10)
 
         # Calculate weights for info matrix
         W_diag = mu * (1 - mu)
@@ -206,8 +210,6 @@ class AFibAnalyzerMixin:
         info_matrix = X.T @ W @ X
 
         # Deviance calculation
-        # Ensure mu is not exactly 0 or 1 to avoid log(0)
-        mu = np.clip(mu, 1e-10, 1 - 1e-10)
         deviance = -2 * np.sum(y * np.log(mu) + (1 - y) * np.log(1 - mu))
 
         return {
