@@ -84,10 +84,10 @@ class TestGLMIterationCalculation:
         assert result is not None
         score = np.array(result["score_vector"])
         
-        # When beta = 0, mu should be 0.5 (clipped to be in valid range)
-        # Score should be X^T(y - mu)
-        # With y = [1,0,1,0] and mu ≈ [0.5,0.5,0.5,0.5]
-        # residuals = [0.5, -0.5, 0.5, -0.5]
+        # When beta = 0, mu should be 0.5 (after clipping to valid range)
+        # Score = X^T(y - mu)
+        # With y = [1,0,1,0,1,0,1,0,1,0] and mu ≈ [0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5]
+        # residuals = [0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5, 0.5, -0.5]
         
         assert score.shape == (2,), f"Score should have 2 elements, got {score.shape}"
         assert np.all(np.isfinite(score)), "Score should not contain inf or nan"
@@ -251,7 +251,9 @@ class TestNumericalStability:
 
         analyzer = TestAnalyzer()
 
-        # All outcome=1 cases have predictor=0, all outcome=0 cases have predictor=1
+        # Perfect separation: all outcome=1 cases have separating_var=0, 
+        # all outcome=0 cases have separating_var=1
+        # predictor1 values: 1.0 for outcome=1, 10.0 for outcome=0
         # Need at least 10 samples
         df = pd.DataFrame(
             {
