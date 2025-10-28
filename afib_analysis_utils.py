@@ -18,7 +18,7 @@ __version__ = "0.0.0"
 
 # Analysis parameters
 MAX_ITERATIONS = 30
-CONVERGENCE_THRESHOLD = 1e-1
+CONVERGENCE_THRESHOLD = 1e-6
 
 
 class AFibAnalyzerMixin:
@@ -120,14 +120,15 @@ class AFibAnalyzerMixin:
         self.analysis_df.dropna(subset=["NTproBNP.unit"], inplace=True)
 
         unit_factors = {
-            "pg/ml": 1.0,
+            "pg/ml": 1.0,  # default
             "ng/l": 1.0,
-            "pg/dl": 100.0,
-            "pg/100ml": 100.0,
-            "pg%": 100.0,
-            "pg/l": 1000.0,
-            "pmol/l": 0.118,
+            "pg/dl": 0.01,
+            "pg/100ml": 0.01,
+            "pg%": 0.01,
+            "pg/l": 0.001,
+            "pmol/l": 8.457,  # See: https://journals.sagepub.com/doi/full/10.1258/acb.2007.007069 "NT-proBNP concentrations are expressed in picomoles/litre (for conversion to picograms/millilitre they are multiplied by 8.457)."
         }
+
         unit_lower = self.analysis_df["NTproBNP.unit"].str.lower()
         valid_mask = unit_lower.isin(unit_factors.keys())
         self.analysis_df = self.analysis_df[valid_mask].copy()
