@@ -1,3 +1,8 @@
+Projectathon7-VHF-DataSHIELD/
+.github/copilot-instructions.md
+sdk-core-doc.md
+vcf_qc.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
