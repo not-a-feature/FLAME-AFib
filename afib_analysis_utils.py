@@ -178,6 +178,10 @@ class AFibAnalyzerMixin:
                 & (self.analysis_df["Stroke"] == 0)
                 & (self.analysis_df["HeartFailure"] == 0)
             ].copy(),
+            # TODO: Demographic subcohorts, is existing but never used R analysis
+            # "SUBSET_MALES": self.analysis_df[self.analysis_df["gender"] == "male"].copy(),
+            # "SUBSET_FEMALES": self.analysis_df[self.analysis_df["gender"] == "female"].copy(),
+            # "SUBSET_AGE_ABOVE_80": self.analysis_df[self.analysis_df["age"] > 80].copy(),
         }
 
     def _calculate_glm_iteration(
@@ -243,16 +247,7 @@ class AFibAggregatorMixin:
         if not first_result:
             return
 
-        model_predictors = {
-            "CONDITIONTEST": ["nt_pro_bnp_value", "age", "gender"],
-            "CONDITION_AFIB": ["nt_pro_bnp_value", "age", "gender"],
-            "CONDITION_HIS": ["nt_pro_bnp_value", "age", "gender"],
-            "CONDITION_AFIB2": ["nt_pro_bnp_value", "age", "gender"],
-            "CONDITION_HIS2": ["nt_pro_bnp_value", "age", "gender"],
-            "CONDITION_AFIB3": ["nt_pro_bnp_value", "age", "gender"],
-        }
-
-        for name, predictors in model_predictors.items():
+        for name, (outcome, predictors) in MODEL_DEFINITIONS.items():
             self.model_states[name] = {
                 "beta": [0.0] * (len(predictors) + 1),
                 "deviance": float("inf"),
@@ -378,12 +373,18 @@ class AFibAggregatorMixin:
 
 # Model definitions used in analysis
 MODEL_DEFINITIONS = {
+    # name, (outcome, [predictor_1, predictor_2, ...])
     "CONDITIONTEST": ("IdiopathicHypotension", ["nt_pro_bnp_value", "age", "gender"]),
     "CONDITION_AFIB": ("AtrialFibrillation", ["nt_pro_bnp_value", "age", "gender"]),
     "CONDITION_HIS": ("HeartFailure", ["nt_pro_bnp_value", "age", "gender"]),
     "CONDITION_AFIB2": ("AtrialFibrillation", ["nt_pro_bnp_value", "age", "gender"]),
     "CONDITION_HIS2": ("HeartFailure", ["nt_pro_bnp_value", "age", "gender"]),
     "CONDITION_AFIB3": ("AtrialFibrillation", ["nt_pro_bnp_value", "age", "gender"]),
+    # For gender subsets, we exclude gender as a predictor since it's constant within the subset
+    # "SUBSET_MALES": ("AtrialFibrillation", ["nt_pro_bnp_value", "age"]),
+    # "SUBSET_FEMALES": ("AtrialFibrillation", ["nt_pro_bnp_value", "age"]),
+    # For age >80 subset, we keep all predictors
+    # "SUBSET_AGE_ABOVE_80": ("AtrialFibrillation", ["nt_pro_bnp_value", "age", "gender"]),
 }
 
 
