@@ -123,48 +123,87 @@ class DirectGLMAnalyzer(AFibAnalyzerMixin):
                 "error": f"{type(e).__name__}: {str(e)}",
             }
 
-    def fit_all_models(self) -> Dict[str, Any]:
-        """Fit all models defined in MODEL_DEFINITIONS."""
+    def fit_all_models(self) -> Dict[str, Dict[str, Any]]:
+        """Fit all models across all demographic cohorts.
+
+        Returns:
+            Nested dict: {cohort_name: {analysis_name: result}}
+        """
         self._load_and_prepare_data()
 
-        results = {}
-        print(f"Fitting {len(MODEL_DEFINITIONS)} models...")
+        # Get all demographic cohorts
+        demographic_cohorts = self._get_demographic_cohorts()
 
-        for name, (outcome, predictors) in MODEL_DEFINITIONS.items():
-            subcohort_df = self.subcohorts.get(name)
-            if subcohort_df is None or subcohort_df.empty:
-                results[name] = {
+        all_results = {}
+        total_models = len(demographic_cohorts) * len(MODEL_DEFINITIONS)
+        print(
+            f"\nFitting {len(MODEL_DEFINITIONS)} models across {len(demographic_cohorts)} cohorts ({total_models} total)...\n"
+        )
+
+        for cohort_name, cohort_df in demographic_cohorts.items():
+            cohort_label = cohort_name.split("_", 1)[1] if "_" in cohort_name else cohort_name
+            print(f"Cohort: {cohort_label} (n={len(cohort_df)})")
+
+            if cohort_df.empty:
+                all_results[cohort_name] = {
                     "status": "failed",
-                    "error": "Subcohort is empty",
+                    "error": "Cohort is empty",
+                    "n_records": 0,
                 }
                 continue
 
-            results[name] = self._fit_glm_model(subcohort_df, outcome, predictors)
+            # Prepare subcohorts for this demographic cohort
+            self._prepare_subcohorts(cohort_df)
 
-            if results[name]["status"] == "success":
-                print(f"  {name}: SUCCESS")
-            else:
-                print(f"  {name}: FAILED - {results[name]['error']}")
+            cohort_results = {}
+            for name, (outcome, predictors) in MODEL_DEFINITIONS.items():
+                subcohort_df = self.subcohorts.get(name)
+                if subcohort_df is None or subcohort_df.empty:
+                    cohort_results[name] = {
+                        "status": "failed",
+                        "error": "Subcohort is empty",
+                    }
+                    continue
 
-        return results
+                cohort_results[name] = self._fit_glm_model(subcohort_df, outcome, predictors)
+
+                if cohort_results[name]["status"] == "success":
+                    print(f"  {name}: SUCCESS")
+                else:
+                    print(f"  {name}: FAILED - {cohort_results[name]['error']}")
+
+            all_results[cohort_name] = {
+                "status": "completed",
+                "n_records": len(cohort_df),
+                "analyses": cohort_results,
+            }
+            print()
+
+        return all_results
 
     def get_summary_stats(self) -> Dict[str, Any]:
         """Get summary statistics for the combined dataset."""
         if self.analysis_df is None:
             raise RuntimeError("Data not loaded")
 
+        df = self.analysis_df
         return {
-            "total_records": len(self.analysis_df),
-            "nt_pro_bnp_weighted_mean": float(self.analysis_df["nt_pro_bnp_value"].mean()),
-            "age_weighted_mean": float(self.analysis_df["age"].mean()),
-            "total_atrial_fibrillation": int(self.analysis_df["AtrialFibrillation"].sum()),
-            "total_heart_failure": int(self.analysis_df["HeartFailure"].sum()),
+            "total_records": len(df),
+            "nt_pro_bnp_mean": float(df["nt_pro_bnp_value"].mean()),
+            "nt_pro_bnp_std": float(df["nt_pro_bnp_value"].std()),
+            "age_mean": float(df["age"].mean()),
+            "age_std": float(df["age"].std()),
+            "total_atrial_fibrillation": int(df["AtrialFibrillation"].sum()),
+            "total_heart_failure": int(df["HeartFailure"].sum()),
+            "total_myocardial_infarction": int(df["MyocardialInfarction"].sum()),
+            "total_stroke": int(df["Stroke"].sum()),
+            "gender_distribution": df["gender"].value_counts().to_dict(),
             "n_nodes": 1,  # Direct analysis treats all data as single node
         }
 
 
 def main():
-    """Run direct GLM analysis on combined data."""
+    """Run direct GLM analysis on combined data across all demographic cohorts."""
     node_data_paths = ["data/node_1", "data/node_2"]
 
     print(f"\n{'='*60}")
@@ -172,25 +211,40 @@ def main():
     print(f"{'='*60}\n")
 
     analyzer = DirectGLMAnalyzer(node_data_paths)
-    model_results = analyzer.fit_all_models()
+    cohort_results = analyzer.fit_all_models()
     summary_stats = analyzer.get_summary_stats()
+
+    # Count successful analyses
+    total_analyses = 0
+    successful_analyses = 0
+    for cohort_name, cohort_data in cohort_results.items():
+        if "analyses" in cohort_data:
+            for analysis_name, analysis_result in cohort_data["analyses"].items():
+                total_analyses += 1
+                if analysis_result.get("status") == "success":
+                    successful_analyses += 1
 
     # Compile final results
     final_results = {
         "overall_status": "completed",
-        "aggregated_summary": summary_stats,
-        "aggregated_models": model_results,
+        "summary": {
+            "dataset_statistics": summary_stats,
+            "total_cohorts": len(cohort_results),
+            "total_analyses": total_analyses,
+            "successful_analyses": successful_analyses,
+        },
+        "cohort_results": cohort_results,
     }
 
     result_json = json.dumps(final_results, indent=2)
-    print(result_json)
+    # print(result_json)
 
     # Write to output file
     os.makedirs("output", exist_ok=True)
     output_path = "output/direct.json"
     with open(output_path, "w") as f:
         f.write(result_json)
-    print(f"\nResults written to {output_path}")
+    print(f"Results written to {output_path}")
 
 
 if __name__ == "__main__":

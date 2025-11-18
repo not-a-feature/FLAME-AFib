@@ -150,38 +150,74 @@ class AFibAnalyzerMixin:
             & (self.analysis_df["age"].notna())
         ].copy()
 
-    def _prepare_subcohorts(self):
-        """Create and cache all subcohort dataframes for analysis."""
+    def _get_demographic_cohorts(self) -> Dict[str, pd.DataFrame]:
+        """Create demographic cohorts matching the R implementation.
+
+        Returns:
+            Dictionary mapping cohort names to filtered DataFrames
+        """
         if self.analysis_df is None:
             raise RuntimeError("Analysis DataFrame not prepared")
 
+        df = self.analysis_df
+
+        cohorts = {
+            "01_FullCohort": df.copy(),
+            "02_Males": df[df["gender"] == "male"].copy(),
+            "03_Females": df[df["gender"] == "female"].copy(),
+            "04_Age_18_50": df[(df["age"] >= 18) & (df["age"] <= 50)].copy(),
+            "05_Age_51_80": df[(df["age"] >= 51) & (df["age"] <= 80)].copy(),
+            "06_Age_81_Inf": df[df["age"] > 80].copy(),
+            "07_Males_Age_18_50": df[
+                (df["gender"] == "male") & (df["age"] >= 18) & (df["age"] <= 50)
+            ].copy(),
+            "08_Males_Age_51_80": df[
+                (df["gender"] == "male") & (df["age"] >= 51) & (df["age"] <= 80)
+            ].copy(),
+            "09_Males_Age_81_Inf": df[(df["gender"] == "male") & (df["age"] > 80)].copy(),
+            "10_Females_Age_18_50": df[
+                (df["gender"] == "female") & (df["age"] >= 18) & (df["age"] <= 50)
+            ].copy(),
+            "11_Females_Age_51_80": df[
+                (df["gender"] == "female") & (df["age"] >= 51) & (df["age"] <= 80)
+            ].copy(),
+            "12_Females_Age_81_Inf": df[(df["gender"] == "female") & (df["age"] > 80)].copy(),
+        }
+
+        return cohorts
+
+    def _prepare_subcohorts(self, cohort_df: pd.DataFrame | None = None):
+        """Create and cache all subcohort dataframes for analysis.
+
+        Args:
+            cohort_df: Optional DataFrame to use as base cohort. If None, uses self.analysis_df
+        """
+        if cohort_df is None:
+            if self.analysis_df is None:
+                raise RuntimeError("Analysis DataFrame not prepared")
+            cohort_df = self.analysis_df
+
         # Recode gender once
         gender_map = {"male": 0, "female": 1}
-        self.analysis_df["gender_numeric"] = (
-            self.analysis_df["gender"].map(gender_map).fillna(2).astype(int)
-        )
+        cohort_df["gender_numeric"] = cohort_df["gender"].map(gender_map).fillna(2).astype(int)
 
         # Subcohorts should NOT be filtered by outcome variable
         # They represent different populations where we model the outcome
         self.subcohorts = {
-            "CONDITIONTEST": self.analysis_df.copy(),
-            "CONDITION_AFIB": self.analysis_df.copy(),
-            "CONDITION_HIS": self.analysis_df.copy(),
-            "CONDITION_AFIB2": self.analysis_df[
-                (self.analysis_df["MyocardialInfarction"] == 0) & (self.analysis_df["Stroke"] == 0)
+            "CONDITIONTEST": cohort_df.copy(),
+            "CONDITION_AFIB": cohort_df.copy(),
+            "CONDITION_HIS": cohort_df.copy(),
+            "CONDITION_AFIB2": cohort_df[
+                (cohort_df["MyocardialInfarction"] == 0) & (cohort_df["Stroke"] == 0)
             ].copy(),
-            "CONDITION_HIS2": self.analysis_df[
-                (self.analysis_df["MyocardialInfarction"] == 0) & (self.analysis_df["Stroke"] == 0)
+            "CONDITION_HIS2": cohort_df[
+                (cohort_df["MyocardialInfarction"] == 0) & (cohort_df["Stroke"] == 0)
             ].copy(),
-            "CONDITION_AFIB3": self.analysis_df[
-                (self.analysis_df["MyocardialInfarction"] == 0)
-                & (self.analysis_df["Stroke"] == 0)
-                & (self.analysis_df["HeartFailure"] == 0)
+            "CONDITION_AFIB3": cohort_df[
+                (cohort_df["MyocardialInfarction"] == 0)
+                & (cohort_df["Stroke"] == 0)
+                & (cohort_df["HeartFailure"] == 0)
             ].copy(),
-            # TODO: Demographic subcohorts, is existing but never used R analysis
-            # "SUBSET_MALES": self.analysis_df[self.analysis_df["gender"] == "male"].copy(),
-            # "SUBSET_FEMALES": self.analysis_df[self.analysis_df["gender"] == "female"].copy(),
-            # "SUBSET_AGE_ABOVE_80": self.analysis_df[self.analysis_df["age"] > 80].copy(),
         }
 
     def _calculate_glm_iteration(
