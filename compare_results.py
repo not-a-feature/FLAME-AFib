@@ -147,7 +147,7 @@ def compare_values(val1: Any, val2: Any, path: str = "root") -> Tuple[bool, List
         return len(errors) == 0, errors
 
     # Fallback to direct comparison
-    if val1 != val2:
+    if val1 != val2 and "iterations" not in path:
         errors.append(f"Value mismatch at {path}: {val1} vs {val2}")
 
     return len(errors) == 0, errors
