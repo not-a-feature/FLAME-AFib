@@ -147,7 +147,7 @@ def compare_values(val1: Any, val2: Any, path: str = "root") -> Tuple[bool, List
         return len(errors) == 0, errors
 
     # Fallback to direct comparison
-    if val1 != val2 and "iterations" not in path:
+    if val1 != val2 and not path.endswith("iterations"):
         errors.append(f"Value mismatch at {path}: {val1} vs {val2}")
 
     return len(errors) == 0, errors
@@ -156,38 +156,61 @@ def compare_values(val1: Any, val2: Any, path: str = "root") -> Tuple[bool, List
 def print_summary_comparison(local_data: Dict[str, Any], direct_data: Dict[str, Any]):
     """Print a summary comparison of key metrics."""
 
-    local_models = local_data.get("aggregated_models", {})
-    direct_models = direct_data.get("aggregated_models", {})
+    local_cohorts = local_data.get("cohort_results", {})
+    direct_cohorts = direct_data.get("cohort_results", {})
 
-    for model_name in sorted(local_models.keys()):
-        if model_name not in direct_models:
-            print(f"\n[{model_name}] MISSING in direct analysis")
+    for cohort_name in sorted(local_cohorts.keys()):
+        if cohort_name not in direct_cohorts:
+            print(f"\n[{cohort_name}] MISSING in direct analysis")
             continue
 
-        local_model = local_models[model_name]
-        direct_model = direct_models[model_name]
+        local_cohort = local_cohorts[cohort_name]
+        direct_cohort = direct_cohorts[cohort_name]
 
-        print(f"\n[{model_name}]")
-        print(f"  Status: Local={local_model.get('status')}, Direct={direct_model.get('status')}")
+        print(f"\n[{cohort_name}]")
+        print(f"  Status: Local={local_cohort.get('status')}, Direct={direct_cohort.get('status')}")
+        print(
+            f"  Records: Local={local_cohort.get('n_records')}, Direct={direct_cohort.get('n_records')}"
+        )
 
-        if local_model.get("status") == "success" and direct_model.get("status") == "success":
+        if local_cohort.get("status") != "completed" or direct_cohort.get("status") != "completed":
+            continue
+
+        local_analyses = local_cohort.get("analyses", {})
+        direct_analyses = direct_cohort.get("analyses", {})
+
+        for analysis_name in sorted(local_analyses.keys()):
+            if analysis_name not in direct_analyses:
+                print(f"  [{analysis_name}] MISSING in direct analysis")
+                continue
+
+            local_model = local_analyses[analysis_name]
+            direct_model = direct_analyses[analysis_name]
+
+            if local_model.get("status") != "success" or direct_model.get("status") != "success":
+                print(
+                    f"  [{analysis_name}] Status: Local={local_model.get('status')}, Direct={direct_model.get('status')}"
+                )
+                continue
+
+            print(f"  [{analysis_name}]")
             print(
-                f"  Converged: Local={local_model.get('converged')}, Direct={direct_model.get('converged')}"
+                f"    Converged: Local={local_model.get('converged')}, Direct={direct_model.get('converged')}"
             )
             print(
-                f"  Iterations: Local={local_model.get('iterations')}, Direct={direct_model.get('iterations')}"
+                f"    Iterations: Local={local_model.get('iterations')}, Direct={direct_model.get('iterations')}"
             )
 
             local_coef = local_model.get("coefficients", {})
             direct_coef = direct_model.get("coefficients", {})
 
-            print(f"  Coefficients:")
+            print(f"    Coefficients:")
             for coef_name in sorted(local_coef.keys()):
                 if coef_name in direct_coef:
                     diff = abs(local_coef[coef_name] - direct_coef[coef_name])
                     match = "✓" if diff < 1e-4 else "✗"
                     print(
-                        f"    {match} {coef_name:20s}: Local={local_coef[coef_name]:12.6f}, Direct={direct_coef[coef_name]:12.6f}, Diff={diff:.2e}"
+                        f"      {match} {coef_name:20s}: Local={local_coef[coef_name]:12.6f}, Direct={direct_coef[coef_name]:12.6f}, Diff={diff:.2e}"
                     )
 
 

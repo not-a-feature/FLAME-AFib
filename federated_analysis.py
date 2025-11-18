@@ -25,7 +25,6 @@ import io
 from flame.star import StarModel, StarAnalyzer, StarAggregator
 
 import pandas as pd
-import numpy as np
 import warnings
 
 from afib_analysis_utils import (
@@ -78,7 +77,6 @@ class AFibAnalyzer(StarAnalyzer, AFibAnalyzerMixin):
 
         self._prepare_analysis_data()
         self._filter_data()
-        self._prepare_subcohorts()
 
     def _extract_s3_content(self, data: List[Dict[str, Any]]):
         """Extract cohort and diagnoses file content from S3 data payload."""
@@ -104,7 +102,7 @@ class AFibAnalyzer(StarAnalyzer, AFibAnalyzerMixin):
         data: List[Dict[str, Any]],
         aggregator_results: Dict[str, Any] | List[Dict[str, Any]] | None,
     ) -> Dict[str, Any]:
-        """Perform one round of federated GLM fitting."""
+        """Perform one round of federated GLM fitting across all demographic cohorts."""
         self.node_id = self.flame.get_id()
 
         # Load and prepare data (cached after first call)
@@ -136,15 +134,19 @@ class AFibAggregator(StarAggregator, AFibAggregatorMixin):
         return run_aggregation_iteration(self, analysis_results)
 
     def has_converged(self, result, last_result, num_iterations):  # type: ignore[no-untyped-def]
-        """Check if all models have converged or max iterations reached."""
+        """Check if all models across all cohorts have converged or max iterations reached."""
         if num_iterations >= MAX_ITERATIONS:
             return True
 
-        model_states = result.get("model_states", {})
+        model_states = result["model_states"] if "model_states" in result else {}
         if not model_states:
             return True
 
-        all_converged = all(state.get("converged", False) for state in model_states.values())
+        all_converged = all(
+            state["converged"] if "converged" in state else False
+            for models in model_states.values()
+            for state in models.values()
+        )
         return all_converged
 
 

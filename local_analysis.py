@@ -25,7 +25,6 @@ from typing import Any, Dict, List
 import os
 
 import pandas as pd
-import numpy as np
 import warnings
 
 from afib_analysis_utils import (
@@ -75,17 +74,16 @@ class AFibAnalyzer(AFibAnalyzerMixin):
 
         self._prepare_analysis_data()
         self._filter_data()
-        self._prepare_subcohorts()
 
     def analysis_method(
         self,
         aggregator_results: Dict[str, Any] | None,
     ) -> Dict[str, Any]:
-        """Perform one round of federated GLM fitting."""
+        """Perform one round of federated GLM fitting across all demographic cohorts."""
         # Load and prepare data (cached after first call)
         self._load_and_prepare_data()
 
-        return run_analysis_iteration(self, aggregator_results)
+        return run_analysis_iteration(self, aggregator_results, self.node_id)
 
 
 class AFibAggregator(AFibAggregatorMixin):
@@ -101,7 +99,7 @@ class AFibAggregator(AFibAggregatorMixin):
         return run_aggregation_iteration(self, analysis_results)
 
     def has_converged(self, num_iterations: int) -> bool:
-        """Check if all models have converged or max iterations reached."""
+        """Check if all models across all cohorts have converged or max iterations reached."""
         if num_iterations >= MAX_ITERATIONS:
             return True
 
@@ -111,17 +109,21 @@ class AFibAggregator(AFibAggregatorMixin):
         if not self.model_states:
             return True  # Stop if no models are running after initialization
 
-        return all(state.get("converged", False) for state in self.model_states.values())
+        return all(
+            state["converged"] if "converged" in state else False
+            for models in self.model_states.values()
+            for state in models.values()
+        )
 
 
 def main():
-    """Configure and run the local federated AFib analysis."""
+    """Configure and run the local federated AFib analysis across multiple demographic cohorts."""
     node_data_paths = ["data/node_1", "data/node_2"]
     analyzers = [AFibAnalyzer(f"node_{i+1}", path) for i, path in enumerate(node_data_paths)]
     aggregator = AFibAggregator()
 
     print(f"\n{'='*60}")
-    print(f"Federated AFib Analysis ({len(analyzers)} nodes)")
+    print(f"Local Federated AFib Analysis ({len(analyzers)} nodes)")
     print(f"{'='*60}")
 
     aggregator_results = None
@@ -150,14 +152,14 @@ def main():
     print(f"{'='*60}\n")
 
     result_json = aggregator.get_result()
-    print(result_json)
+    # print(result_json)
 
     # Write to output file
     os.makedirs("output", exist_ok=True)
     output_path = "output/local.json"
     with open(output_path, "w") as f:
         f.write(result_json)
-    print(f"\nResults written to {output_path}")
+    print(f"Results written to {output_path}")
 
 
 if __name__ == "__main__":

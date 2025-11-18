@@ -23,7 +23,7 @@ import numpy as np
 import statsmodels.api as sm
 import warnings
 
-from afib_analysis_utils import AFibAnalyzerMixin, MODEL_DEFINITIONS
+from afib_analysis_utils import AFibAnalyzerMixin, get_model_definitions
 
 warnings.filterwarnings("ignore")
 
@@ -89,7 +89,8 @@ class DirectGLMAnalyzer(AFibAnalyzerMixin):
             }
 
         y = df_model[outcome]
-        X = sm.add_constant(df_model[predictors], prepend=True)
+        # Force adding const to ensure consistency across nodes in federated setting
+        X = sm.add_constant(df_model[predictors], prepend=True, has_constant="add")
 
         try:
             # Fit logistic regression using GLM with binomial family
@@ -97,10 +98,11 @@ class DirectGLMAnalyzer(AFibAnalyzerMixin):
             result = model.fit()
 
             # Extract coefficients and standard errors
-            predictor_names = ["intercept"] + predictors
-            coefficients = dict(zip(predictor_names, result.params))
-            stderr = dict(zip(predictor_names, result.bse))
-            pvalues = dict(zip(predictor_names, result.pvalues))
+            # Use the index from result.params to get correct predictor names
+            # (statsmodels may drop constant columns)
+            coefficients = result.params.to_dict()
+            stderr = result.bse.to_dict()
+            pvalues = result.pvalues.to_dict()
 
             # Calculate deviance
             deviance = result.deviance
@@ -135,9 +137,12 @@ class DirectGLMAnalyzer(AFibAnalyzerMixin):
         demographic_cohorts = self._get_demographic_cohorts()
 
         all_results = {}
-        total_models = len(demographic_cohorts) * len(MODEL_DEFINITIONS)
+        # Use first cohort to get model count (all cohorts have same number of models)
+        first_cohort = next(iter(demographic_cohorts.keys()))
+        model_defs = get_model_definitions(first_cohort)
+        total_models = len(demographic_cohorts) * len(model_defs)
         print(
-            f"\nFitting {len(MODEL_DEFINITIONS)} models across {len(demographic_cohorts)} cohorts ({total_models} total)...\n"
+            f"\nFitting {len(model_defs)} models across {len(demographic_cohorts)} cohorts ({total_models} total)...\n"
         )
 
         for cohort_name, cohort_df in demographic_cohorts.items():
@@ -155,9 +160,15 @@ class DirectGLMAnalyzer(AFibAnalyzerMixin):
             # Prepare subcohorts for this demographic cohort
             self._prepare_subcohorts(cohort_df)
 
+            # Get model definitions appropriate for this cohort
+            model_defs = get_model_definitions(cohort_name)
+
             cohort_results = {}
-            for name, (outcome, predictors) in MODEL_DEFINITIONS.items():
-                subcohort_df = self.subcohorts.get(name)
+            for name, (outcome, predictors) in model_defs.items():
+                subcohort_df = None
+                if name in self.subcohorts:
+                    subcohort_df = self.subcohorts[name]
+
                 if subcohort_df is None or subcohort_df.empty:
                     cohort_results[name] = {
                         "status": "failed",
@@ -221,7 +232,7 @@ def main():
         if "analyses" in cohort_data:
             for analysis_name, analysis_result in cohort_data["analyses"].items():
                 total_analyses += 1
-                if analysis_result.get("status") == "success":
+                if analysis_result["status"] == "success":
                     successful_analyses += 1
 
     # Compile final results

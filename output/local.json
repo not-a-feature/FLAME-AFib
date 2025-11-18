@@ -1,115 +1,1226 @@
 {
   "overall_status": "completed",
-  "aggregated_summary": {
-    "total_records": 196,
-    "nt_pro_bnp_weighted_mean": 168.5144387755102,
-    "age_weighted_mean": 22.821428571428573,
-    "total_atrial_fibrillation": 24,
-    "total_heart_failure": 24,
-    "n_nodes": 2
+  "summary": {
+    "dataset_statistics": {
+      "total_records": 340,
+      "nt_pro_bnp_mean": 217.95829411764703,
+      "nt_pro_bnp_std": 247.96076400438682,
+      "age_mean": 62.779411764705884,
+      "age_std": 24.836754672049757,
+      "total_atrial_fibrillation": 60,
+      "total_heart_failure": 60,
+      "total_myocardial_infarction": 60,
+      "total_stroke": 60,
+      "gender_distribution": {
+        "male": 176,
+        "female": 164
+      },
+      "n_nodes": 2
+    },
+    "total_cohorts": 12,
+    "total_analyses": 72,
+    "successful_analyses": 72
   },
-  "aggregated_models": {
-    "CONDITIONTEST": {
-      "status": "success",
-      "coefficients": {
-        "intercept": 1.3937093212597997,
-        "nt_pro_bnp_value": -0.04204286842895199,
-        "age": 0.08023596102555479,
-        "gender": 1.4517471883788762
-      },
-      "stderr": {
-        "intercept": 2.784514554096064,
-        "nt_pro_bnp_value": 0.006537085133918914,
-        "age": 0.12356755636046556,
-        "gender": 0.5567966893222934
-      },
-      "iterations": 9,
-      "converged": true
+  "cohort_results": {
+    "01_FullCohort": {
+      "status": "completed",
+      "n_records": 340,
+      "analyses": {
+        "CONDITIONTEST": {
+          "status": "success",
+          "coefficients": {
+            "const": 2.4042897599844832,
+            "nt_pro_bnp_value": -0.041975948007204826,
+            "age": 0.0020658939815383953,
+            "gender": 0.7107619497751942
+          },
+          "stderr": {
+            "const": 0.6346307596940559,
+            "nt_pro_bnp_value": 0.005420746627160068,
+            "age": 0.007611577391488175,
+            "gender": 0.38171696754576484
+          },
+          "iterations": 10,
+          "converged": true
+        },
+        "CONDITION_AFIB": {
+          "status": "success",
+          "coefficients": {
+            "const": -1.2330057553623563,
+            "nt_pro_bnp_value": -0.0020366194119740676,
+            "age": -1.217708094196814e-05,
+            "gender": 0.13260025107298937
+          },
+          "stderr": {
+            "const": 0.44283677259493637,
+            "nt_pro_bnp_value": 0.0008382116874269115,
+            "age": 0.005866888562834456,
+            "gender": 0.2893012253181787
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS": {
+          "status": "success",
+          "coefficients": {
+            "const": -17.49937685956652,
+            "nt_pro_bnp_value": 0.042804543821839694,
+            "age": 0.015150010900773975,
+            "gender": 1.8409636234312619
+          },
+          "stderr": {
+            "const": 4.4003522564067765,
+            "nt_pro_bnp_value": 0.01049977816013895,
+            "age": 0.018481396213120973,
+            "gender": 1.0605352358599331
+          },
+          "iterations": 11,
+          "converged": true
+        },
+        "CONDITION_AFIB2": {
+          "status": "success",
+          "coefficients": {
+            "const": -0.5823737836977424,
+            "nt_pro_bnp_value": -0.002094688506410696,
+            "age": -0.0013159492314005082,
+            "gender": 0.2242431018268325
+          },
+          "stderr": {
+            "const": 0.47170193746853495,
+            "nt_pro_bnp_value": 0.0007208123307672896,
+            "age": 0.006281263762713416,
+            "gender": 0.3127512980897883
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS2": {
+          "status": "success",
+          "coefficients": {
+            "const": -110.45893160121487,
+            "nt_pro_bnp_value": 0.43572933008979403,
+            "age": -0.09695283543307251,
+            "gender": -0.6308039735430649
+          },
+          "stderr": {
+            "const": 166487.294820149,
+            "nt_pro_bnp_value": 489.7199356090458,
+            "age": 1358.4731680767024,
+            "gender": 100288.9248928514
+          },
+          "iterations": 28,
+          "converged": true
+        },
+        "CONDITION_AFIB3": {
+          "status": "success",
+          "coefficients": {
+            "const": -4.811996901016994,
+            "nt_pro_bnp_value": 0.05178072099080931,
+            "age": 0.005609287414777887,
+            "gender": -1.434642109243604
+          },
+          "stderr": {
+            "const": 1.1154961448061227,
+            "nt_pro_bnp_value": 0.007979422967056306,
+            "age": 0.011856736258493442,
+            "gender": 0.624011051182461
+          },
+          "iterations": 7,
+          "converged": true
+        }
+      }
     },
-    "CONDITION_AFIB": {
-      "status": "success",
-      "coefficients": {
-        "intercept": -1.0287100539800842,
-        "nt_pro_bnp_value": -0.0009349245636914218,
-        "age": -0.050613201852807134,
-        "gender": 0.7084040037791871
-      },
-      "stderr": {
-        "intercept": 2.869269908848039,
-        "nt_pro_bnp_value": 0.001165793788139455,
-        "age": 0.1263656085197866,
-        "gender": 0.44610092668720147
-      },
-      "iterations": 6,
-      "converged": true
+    "02_Males": {
+      "status": "completed",
+      "n_records": 176,
+      "analyses": {
+        "CONDITIONTEST": {
+          "status": "success",
+          "coefficients": {
+            "const": 3.705385229080056,
+            "nt_pro_bnp_value": -0.06537755000014368,
+            "age": 0.0017558726923237338
+          },
+          "stderr": {
+            "const": 1.1365036746031991,
+            "nt_pro_bnp_value": 0.011687015804745352,
+            "age": 0.013280852308658796
+          },
+          "iterations": 10,
+          "converged": true
+        },
+        "CONDITION_AFIB": {
+          "status": "success",
+          "coefficients": {
+            "const": -1.229220988662556,
+            "nt_pro_bnp_value": -0.0017979517587699305,
+            "age": -0.0005985422124832035
+          },
+          "stderr": {
+            "const": 0.5915271891244758,
+            "nt_pro_bnp_value": 0.0011005646017295378,
+            "age": 0.008183441237216316
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS": {
+          "status": "success",
+          "coefficients": {
+            "const": -22.716960173136236,
+            "nt_pro_bnp_value": 0.04546811630741414,
+            "age": 0.07042991924557457
+          },
+          "stderr": {
+            "const": 9.374862785752235,
+            "nt_pro_bnp_value": 0.01736567401181362,
+            "age": 0.041446429601235395
+          },
+          "iterations": 12,
+          "converged": true
+        },
+        "CONDITION_AFIB2": {
+          "status": "success",
+          "coefficients": {
+            "const": -0.5674576771113372,
+            "nt_pro_bnp_value": -0.0017387826089737542,
+            "age": -0.002362761512017972
+          },
+          "stderr": {
+            "const": 0.6229581163290958,
+            "nt_pro_bnp_value": 0.0009321073399161849,
+            "age": 0.008650477383416394
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS2": {
+          "status": "success",
+          "coefficients": {
+            "const": -98.5854840355379,
+            "nt_pro_bnp_value": 0.3384274043945896,
+            "age": 0.0779753332678134
+          },
+          "stderr": {
+            "const": 259861.20611203255,
+            "nt_pro_bnp_value": 384.25208439783097,
+            "age": 2677.8840519360733
+          },
+          "iterations": 27,
+          "converged": true
+        },
+        "CONDITION_AFIB3": {
+          "status": "success",
+          "coefficients": {
+            "const": -8.93881650877779,
+            "nt_pro_bnp_value": 0.09973397472918365,
+            "age": 0.010857680143551504
+          },
+          "stderr": {
+            "const": 3.1720170934917675,
+            "nt_pro_bnp_value": 0.028766218660331872,
+            "age": 0.024844890056487823
+          },
+          "iterations": 9,
+          "converged": true
+        }
+      }
     },
-    "CONDITION_HIS": {
-      "status": "success",
-      "coefficients": {
-        "intercept": -49.85252531912086,
-        "nt_pro_bnp_value": 0.1322512821304883,
-        "age": 0.268492805312146,
-        "gender": -8.786181563346462
-      },
-      "stderr": {
-        "intercept": 28.14453180661525,
-        "nt_pro_bnp_value": 0.08774220594475718,
-        "age": 0.7221436383620936,
-        "gender": 6.12264097331529
-      },
-      "iterations": 14,
-      "converged": true
+    "03_Females": {
+      "status": "completed",
+      "n_records": 164,
+      "analyses": {
+        "CONDITIONTEST": {
+          "status": "success",
+          "coefficients": {
+            "const": 2.1499450956391466,
+            "nt_pro_bnp_value": -0.02912556161418014,
+            "age": 0.0010298897338926437
+          },
+          "stderr": {
+            "const": 0.7772424281354975,
+            "nt_pro_bnp_value": 0.005638994114274742,
+            "age": 0.0096216071468972
+          },
+          "iterations": 9,
+          "converged": true
+        },
+        "CONDITION_AFIB": {
+          "status": "success",
+          "coefficients": {
+            "const": -1.101848141359676,
+            "nt_pro_bnp_value": -0.002344290063188106,
+            "age": 0.0008409578795143168
+          },
+          "stderr": {
+            "const": 0.5752252026496976,
+            "nt_pro_bnp_value": 0.0012894711477133872,
+            "age": 0.008437615970371088
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS": {
+          "status": "success",
+          "coefficients": {
+            "const": -23.819581005206448,
+            "nt_pro_bnp_value": 0.0788899313170175,
+            "age": -0.047417962991234235
+          },
+          "stderr": {
+            "const": 10.11159589687585,
+            "nt_pro_bnp_value": 0.032732747866813135,
+            "age": 0.037029900484680724
+          },
+          "iterations": 12,
+          "converged": true
+        },
+        "CONDITION_AFIB2": {
+          "status": "success",
+          "coefficients": {
+            "const": -0.37520557055656606,
+            "nt_pro_bnp_value": -0.0025576499857530204,
+            "age": 0.00032983530481883245
+          },
+          "stderr": {
+            "const": 0.61927750678735,
+            "nt_pro_bnp_value": 0.001125053328793453,
+            "age": 0.009185452020856695
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS2": {
+          "status": "success",
+          "coefficients": {
+            "const": -109.1257488225865,
+            "nt_pro_bnp_value": 0.43072543927948614,
+            "age": -0.10511601457495673
+          },
+          "stderr": {
+            "const": 137678.75608454866,
+            "nt_pro_bnp_value": 447.18715375927127,
+            "age": 1237.8220751401575
+          },
+          "iterations": 27,
+          "converged": true
+        },
+        "CONDITION_AFIB3": {
+          "status": "success",
+          "coefficients": {
+            "const": -4.680225094390165,
+            "nt_pro_bnp_value": 0.037057882096746673,
+            "age": 0.0063044771308807925
+          },
+          "stderr": {
+            "const": 1.3244189386644087,
+            "nt_pro_bnp_value": 0.00786233526008141,
+            "age": 0.014061432885404445
+          },
+          "iterations": 7,
+          "converged": true
+        }
+      }
     },
-    "CONDITION_AFIB2": {
-      "status": "success",
-      "coefficients": {
-        "intercept": -0.4436137408190762,
-        "nt_pro_bnp_value": -0.0007139691933638168,
-        "age": -0.06144107305485347,
-        "gender": 0.605520202259556
-      },
-      "stderr": {
-        "intercept": 3.022091114631446,
-        "nt_pro_bnp_value": 0.0010115009711543527,
-        "age": 0.13278374770527265,
-        "gender": 0.4562049869380047
-      },
-      "iterations": 6,
-      "converged": true
+    "04_Age_18_50": {
+      "status": "completed",
+      "n_records": 114,
+      "analyses": {
+        "CONDITIONTEST": {
+          "status": "success",
+          "coefficients": {
+            "const": 1.7909909401639224,
+            "nt_pro_bnp_value": -0.034543010770173854,
+            "age": 0.00703737330320708,
+            "gender": 0.8464524325057964
+          },
+          "stderr": {
+            "const": 1.2453589523170043,
+            "nt_pro_bnp_value": 0.0076254873179081905,
+            "age": 0.03046447035581193,
+            "gender": 0.6238427415697236
+          },
+          "iterations": 9,
+          "converged": true
+        },
+        "CONDITION_AFIB": {
+          "status": "success",
+          "coefficients": {
+            "const": -1.0191067468021018,
+            "nt_pro_bnp_value": -0.0019772351379391635,
+            "age": -0.005136367210952385,
+            "gender": 0.0013341007391067623
+          },
+          "stderr": {
+            "const": 0.9852988959134,
+            "nt_pro_bnp_value": 0.0014697989916377437,
+            "age": 0.02634522330470328,
+            "gender": 0.4977021963436748
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS": {
+          "status": "success",
+          "coefficients": {
+            "const": -551.5628550114845,
+            "nt_pro_bnp_value": 1.4549656913799363,
+            "age": -1.6038689157918047,
+            "gender": 129.87473888274462
+          },
+          "stderr": {
+            "const": 680897.5438072275,
+            "nt_pro_bnp_value": 1550.5185146883548,
+            "age": 8002.349981283839,
+            "gender": 260948.23816986036
+          },
+          "iterations": 29,
+          "converged": true
+        },
+        "CONDITION_AFIB2": {
+          "status": "success",
+          "coefficients": {
+            "const": -0.07922785019884111,
+            "nt_pro_bnp_value": -0.0021305013748527495,
+            "age": -0.014793674935008414,
+            "gender": 0.016178337989617615
+          },
+          "stderr": {
+            "const": 1.0408853948236538,
+            "nt_pro_bnp_value": 0.0012928912874681851,
+            "age": 0.02782358534101442,
+            "gender": 0.5360930961035809
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS2": {
+          "status": "success",
+          "coefficients": {
+            "const": -89.34845282082361,
+            "nt_pro_bnp_value": 0.3360299362951807,
+            "age": -0.11107922063057955,
+            "gender": 2.2670769322402897
+          },
+          "stderr": {
+            "const": 410340.8723265726,
+            "nt_pro_bnp_value": 313.44701679276363,
+            "age": 9454.074099655727,
+            "gender": 185140.90523870572
+          },
+          "iterations": 26,
+          "converged": true
+        },
+        "CONDITION_AFIB3": {
+          "status": "success",
+          "coefficients": {
+            "const": -9.46523522611897,
+            "nt_pro_bnp_value": 0.07614523220066824,
+            "age": 0.07949919326376377,
+            "gender": -2.371148512887072
+          },
+          "stderr": {
+            "const": 3.9464651068221066,
+            "nt_pro_bnp_value": 0.02502342817694167,
+            "age": 0.06438598196215849,
+            "gender": 1.2755872420903855
+          },
+          "iterations": 8,
+          "converged": true
+        }
+      }
     },
-    "CONDITION_HIS2": {
-      "status": "success",
-      "coefficients": {
-        "intercept": -43.199030183907645,
-        "nt_pro_bnp_value": 0.21573145354096465,
-        "age": -0.4690740166010045,
-        "gender": -12.02460972216858
-      },
-      "stderr": {
-        "intercept": 37608.8848525869,
-        "nt_pro_bnp_value": 27.677911053423855,
-        "age": 1547.74435921199,
-        "gender": 5474.291749709473
-      },
-      "iterations": 22,
-      "converged": true
+    "05_Age_51_80": {
+      "status": "completed",
+      "n_records": 113,
+      "analyses": {
+        "CONDITIONTEST": {
+          "status": "success",
+          "coefficients": {
+            "const": 6.18441323942248,
+            "nt_pro_bnp_value": -0.08044813786989802,
+            "age": -0.022043346187149565,
+            "gender": 0.6509541746336835
+          },
+          "stderr": {
+            "const": 3.872401443865369,
+            "nt_pro_bnp_value": 0.018778391989111656,
+            "age": 0.04997473214668343,
+            "gender": 0.8661433082679244
+          },
+          "iterations": 11,
+          "converged": true
+        },
+        "CONDITION_AFIB": {
+          "status": "success",
+          "coefficients": {
+            "const": -1.204739920703671,
+            "nt_pro_bnp_value": -0.0020394420002698634,
+            "age": -0.0005384341690794581,
+            "gender": 0.12089365580321913
+          },
+          "stderr": {
+            "const": 2.012158622505398,
+            "nt_pro_bnp_value": 0.001499589441458109,
+            "age": 0.029735954364946103,
+            "gender": 0.5094412208933505
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS": {
+          "status": "success",
+          "coefficients": {
+            "const": -154.67709847016877,
+            "nt_pro_bnp_value": 0.17158640518089963,
+            "age": 1.1840937700845933,
+            "gender": 17.164572514689734
+          },
+          "stderr": {
+            "const": 101.94707546307632,
+            "nt_pro_bnp_value": 0.11789525676435743,
+            "age": 0.7635556674988826,
+            "gender": 11.455500453024099
+          },
+          "iterations": 14,
+          "converged": true
+        },
+        "CONDITION_AFIB2": {
+          "status": "success",
+          "coefficients": {
+            "const": 0.18962428877191403,
+            "nt_pro_bnp_value": -0.002027908207862011,
+            "age": -0.013008370085121304,
+            "gender": 0.15957057829669188
+          },
+          "stderr": {
+            "const": 2.1517645546750144,
+            "nt_pro_bnp_value": 0.0012783325763229853,
+            "age": 0.0317941497547026,
+            "gender": 0.5442809746836594
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS2": {
+          "status": "success",
+          "coefficients": {
+            "const": -150.44755146942703,
+            "nt_pro_bnp_value": 0.27363420549579215,
+            "age": 0.9341983708902035,
+            "gender": 18.07644555620219
+          },
+          "stderr": {
+            "const": 690497.5263269134,
+            "nt_pro_bnp_value": 319.3509514477372,
+            "age": 9195.425393015126,
+            "gender": 106145.93770819162
+          },
+          "iterations": 26,
+          "converged": true
+        },
+        "CONDITION_AFIB3": {
+          "status": "success",
+          "coefficients": {
+            "const": -713.2186725839347,
+            "nt_pro_bnp_value": 4.676539372813724,
+            "age": 5.677690357633946,
+            "gender": -72.60819968717024
+          },
+          "stderr": {
+            "const": 1036750.7291954068,
+            "nt_pro_bnp_value": 6112.506542570707,
+            "age": 10019.840092779179,
+            "gender": 472967.95489024016
+          },
+          "iterations": 28,
+          "converged": true
+        }
+      }
     },
-    "CONDITION_AFIB3": {
-      "status": "success",
-      "coefficients": {
-        "intercept": -2.9618674580321547,
-        "nt_pro_bnp_value": 0.047829559364130365,
-        "age": -0.07125137043936769,
-        "gender": -1.9260614156148956
-      },
-      "stderr": {
-        "intercept": 4.16113776779886,
-        "nt_pro_bnp_value": 0.009379214447906655,
-        "age": 0.18430040999307004,
-        "gender": 0.873082664538591
-      },
-      "iterations": 7,
-      "converged": true
+    "06_Age_81_Inf": {
+      "status": "completed",
+      "n_records": 113,
+      "analyses": {
+        "CONDITIONTEST": {
+          "status": "success",
+          "coefficients": {
+            "const": -4.702107117252012,
+            "nt_pro_bnp_value": -0.034399494262671644,
+            "age": 0.07708738587167491,
+            "gender": 0.5941876304333713
+          },
+          "stderr": {
+            "const": 4.775600035822179,
+            "nt_pro_bnp_value": 0.007805480452975594,
+            "age": 0.05356058401253628,
+            "gender": 0.6593228386350499
+          },
+          "iterations": 9,
+          "converged": true
+        },
+        "CONDITION_AFIB": {
+          "status": "success",
+          "coefficients": {
+            "const": 0.16885929564699062,
+            "nt_pro_bnp_value": -0.002086854390955457,
+            "age": -0.01583877698356771,
+            "gender": 0.24698962371875782
+          },
+          "stderr": {
+            "const": 3.740122217909623,
+            "nt_pro_bnp_value": 0.001408614802209935,
+            "age": 0.04126362122987176,
+            "gender": 0.5101892594326305
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS": {
+          "status": "success",
+          "coefficients": {
+            "const": -5874.092282215869,
+            "nt_pro_bnp_value": 4.926151963252558,
+            "age": 42.958432399332445,
+            "gender": 154.12848370398368
+          },
+          "stderr": {
+            "const": 5325377.452927152,
+            "nt_pro_bnp_value": 4363.618612642876,
+            "age": 39711.43825581896,
+            "gender": 581419.7266221181
+          },
+          "iterations": 31,
+          "converged": true
+        },
+        "CONDITION_AFIB2": {
+          "status": "success",
+          "coefficients": {
+            "const": 3.921803246140457,
+            "nt_pro_bnp_value": -0.002092994602616636,
+            "age": -0.05118866824834618,
+            "gender": 0.4268466854819805
+          },
+          "stderr": {
+            "const": 4.012785578103079,
+            "nt_pro_bnp_value": 0.001162138055756107,
+            "age": 0.04412335824142706,
+            "gender": 0.5586850296097375
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS2": {
+          "status": "success",
+          "coefficients": {
+            "const": -59.1331187145639,
+            "nt_pro_bnp_value": 0.34442883383698597,
+            "age": -0.3368354331758983,
+            "gender": -13.959716291410691
+          },
+          "stderr": {
+            "const": 1389267.291362472,
+            "nt_pro_bnp_value": 468.9900216539544,
+            "age": 14242.274057058814,
+            "gender": 334057.109313912
+          },
+          "iterations": 27,
+          "converged": true
+        },
+        "CONDITION_AFIB3": {
+          "status": "success",
+          "coefficients": {
+            "const": 2.3247204026400476,
+            "nt_pro_bnp_value": 0.03329823104563413,
+            "age": -0.06274260097350358,
+            "gender": -0.6400103047760444
+          },
+          "stderr": {
+            "const": 6.274497654575196,
+            "nt_pro_bnp_value": 0.008074475632734944,
+            "age": 0.0705427534091952,
+            "gender": 0.8759480500537912
+          },
+          "iterations": 7,
+          "converged": true
+        }
+      }
+    },
+    "07_Males_Age_18_50": {
+      "status": "completed",
+      "n_records": 57,
+      "analyses": {
+        "CONDITIONTEST": {
+          "status": "success",
+          "coefficients": {
+            "const": 2.400303868903376,
+            "nt_pro_bnp_value": -0.04455203832095052,
+            "age": 0.005808813824375334
+          },
+          "stderr": {
+            "const": 1.989488253926374,
+            "nt_pro_bnp_value": 0.013747592174393244,
+            "age": 0.050416022903919284
+          },
+          "iterations": 10,
+          "converged": true
+        },
+        "CONDITION_AFIB": {
+          "status": "success",
+          "coefficients": {
+            "const": -0.7786543882835468,
+            "nt_pro_bnp_value": -0.0021958529603924443,
+            "age": -0.011365185373772008
+          },
+          "stderr": {
+            "const": 1.3524071039056873,
+            "nt_pro_bnp_value": 0.0020231439270793706,
+            "age": 0.037197439266076715
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS": {
+          "status": "success",
+          "coefficients": {
+            "const": -208.113213834153,
+            "nt_pro_bnp_value": 0.47347492040602324,
+            "age": -0.01609857619796174
+          },
+          "stderr": {
+            "const": 337287.6506123201,
+            "nt_pro_bnp_value": 545.3309576102912,
+            "age": 7037.491122053104
+          },
+          "iterations": 27,
+          "converged": true
+        },
+        "CONDITION_AFIB2": {
+          "status": "success",
+          "coefficients": {
+            "const": 0.046152660958739766,
+            "nt_pro_bnp_value": -0.0021282395648746814,
+            "age": -0.018536666847252498
+          },
+          "stderr": {
+            "const": 1.4441502845202783,
+            "nt_pro_bnp_value": 0.0017171297534019254,
+            "age": 0.039863162186821684
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS2": {
+          "status": "success",
+          "coefficients": {
+            "const": -51.1557903626179,
+            "nt_pro_bnp_value": 0.15943323893712494,
+            "age": -0.10707917643056376
+          },
+          "stderr": {
+            "const": 149754.36651453,
+            "nt_pro_bnp_value": 197.8122141504952,
+            "age": 3778.7406889235262
+          },
+          "iterations": 25,
+          "converged": true
+        },
+        "CONDITION_AFIB3": {
+          "status": "success",
+          "coefficients": {
+            "const": -7.495955113234248,
+            "nt_pro_bnp_value": 0.07358763749148194,
+            "age": 0.02752760992312645
+          },
+          "stderr": {
+            "const": 5.022163613591637,
+            "nt_pro_bnp_value": 0.03412027110937416,
+            "age": 0.08914895941585571
+          },
+          "iterations": 8,
+          "converged": true
+        }
+      }
+    },
+    "08_Males_Age_51_80": {
+      "status": "completed",
+      "n_records": 59,
+      "analyses": {
+        "CONDITIONTEST": {
+          "status": "success",
+          "coefficients": {
+            "const": 7.0055388023384255,
+            "nt_pro_bnp_value": -0.1124582273444844,
+            "age": -0.008861744041039846
+          },
+          "stderr": {
+            "const": 6.727624793092076,
+            "nt_pro_bnp_value": 0.040816121601365024,
+            "age": 0.09006924024895634
+          },
+          "iterations": 12,
+          "converged": true
+        },
+        "CONDITION_AFIB": {
+          "status": "success",
+          "coefficients": {
+            "const": -2.7779446690051635,
+            "nt_pro_bnp_value": -0.0020665818670443214,
+            "age": 0.02295598086028574
+          },
+          "stderr": {
+            "const": 2.938176441893509,
+            "nt_pro_bnp_value": 0.0019625518429759845,
+            "age": 0.04295214872097601
+          },
+          "iterations": 7,
+          "converged": true
+        },
+        "CONDITION_HIS": {
+          "status": "success",
+          "coefficients": {
+            "const": -55.92899988431609,
+            "nt_pro_bnp_value": 0.059264190355827674,
+            "age": 0.4426228724022913
+          },
+          "stderr": {
+            "const": 77.57677104331222,
+            "nt_pro_bnp_value": 0.09015093721451316,
+            "age": 0.5792187106216158
+          },
+          "iterations": 14,
+          "converged": true
+        },
+        "CONDITION_AFIB2": {
+          "status": "success",
+          "coefficients": {
+            "const": -1.8547747989571568,
+            "nt_pro_bnp_value": -0.001965349197171054,
+            "age": 0.017354036635621958
+          },
+          "stderr": {
+            "const": 2.972035350730135,
+            "nt_pro_bnp_value": 0.0016204821324370278,
+            "age": 0.043459807124931436
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS2": {
+          "status": "success",
+          "coefficients": {
+            "const": -50.486813931781725,
+            "nt_pro_bnp_value": 0.21651153368429613,
+            "age": -0.1881500662265253
+          },
+          "stderr": {
+            "const": 362371.8476822812,
+            "nt_pro_bnp_value": 202.25957425775502,
+            "age": 4897.377375399843
+          },
+          "iterations": 25,
+          "converged": true
+        },
+        "CONDITION_AFIB3": {
+          "status": "success",
+          "coefficients": {
+            "const": -701.8746654930711,
+            "nt_pro_bnp_value": 4.599646646944409,
+            "age": 5.590871219255954
+          },
+          "stderr": {
+            "const": 871651.4119686469,
+            "nt_pro_bnp_value": 5091.139175664321,
+            "age": 8429.750254931181
+          },
+          "iterations": 27,
+          "converged": true
+        }
+      }
+    },
+    "09_Males_Age_81_Inf": {
+      "status": "completed",
+      "n_records": 60,
+      "analyses": {
+        "CONDITIONTEST": {
+          "status": "success",
+          "coefficients": {
+            "const": 5.54003575080099,
+            "nt_pro_bnp_value": -0.07124495046896268,
+            "age": -0.015222784547450316
+          },
+          "stderr": {
+            "const": 9.141268342751308,
+            "nt_pro_bnp_value": 0.023384688367611383,
+            "age": 0.0992697603272764
+          },
+          "iterations": 11,
+          "converged": true
+        },
+        "CONDITION_AFIB": {
+          "status": "success",
+          "coefficients": {
+            "const": -3.3479486029966337,
+            "nt_pro_bnp_value": -0.001235218170709456,
+            "age": 0.021445149686581597
+          },
+          "stderr": {
+            "const": 5.319352688493503,
+            "nt_pro_bnp_value": 0.0018075476385949114,
+            "age": 0.05815157023176678
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS": {
+          "status": "success",
+          "coefficients": {
+            "const": -5840.249764022211,
+            "nt_pro_bnp_value": 4.897283224991522,
+            "age": 42.7126401748523
+          },
+          "stderr": {
+            "const": 5059325.131969075,
+            "nt_pro_bnp_value": 4147.399539390798,
+            "age": 37656.66144244117
+          },
+          "iterations": 30,
+          "converged": true
+        },
+        "CONDITION_AFIB2": {
+          "status": "success",
+          "coefficients": {
+            "const": -0.9368790603630954,
+            "nt_pro_bnp_value": -0.0011602845485253817,
+            "age": 0.0006169338056992889
+          },
+          "stderr": {
+            "const": 5.314352278362237,
+            "nt_pro_bnp_value": 0.001535796488033486,
+            "age": 0.05791142908990232
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS2": {
+          "status": "success",
+          "coefficients": {
+            "const": -54.070887671985524,
+            "nt_pro_bnp_value": 0.3404574894494763,
+            "age": -0.3769689150485402
+          },
+          "stderr": {
+            "const": 896853.0232638221,
+            "nt_pro_bnp_value": 412.88431299196543,
+            "age": 9322.045219716381
+          },
+          "iterations": 26,
+          "converged": true
+        },
+        "CONDITION_AFIB3": {
+          "status": "success",
+          "coefficients": {
+            "const": -881.6988991118611,
+            "nt_pro_bnp_value": 4.317911061948359,
+            "age": 5.629114640876446
+          },
+          "stderr": {
+            "const": 1018930.0735055207,
+            "nt_pro_bnp_value": 4566.926059910324,
+            "age": 7353.082015675839
+          },
+          "iterations": 27,
+          "converged": true
+        }
+      }
+    },
+    "10_Females_Age_18_50": {
+      "status": "completed",
+      "n_records": 57,
+      "analyses": {
+        "CONDITIONTEST": {
+          "status": "success",
+          "coefficients": {
+            "const": 2.0066463441577906,
+            "nt_pro_bnp_value": -0.02833153391259765,
+            "age": 0.010020499288571462
+          },
+          "stderr": {
+            "const": 1.5962271702047712,
+            "nt_pro_bnp_value": 0.008827510093061588,
+            "age": 0.03915342725186954
+          },
+          "iterations": 9,
+          "converged": true
+        },
+        "CONDITION_AFIB": {
+          "status": "success",
+          "coefficients": {
+            "const": -1.2410271144057425,
+            "nt_pro_bnp_value": -0.0017723952075804467,
+            "age": 0.0006737281096698201
+          },
+          "stderr": {
+            "const": 1.3175284668965233,
+            "nt_pro_bnp_value": 0.002151239867604841,
+            "age": 0.037599541821598956
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS": {
+          "status": "success",
+          "coefficients": {
+            "const": -421.0263740171084,
+            "nt_pro_bnp_value": 1.4500428718537108,
+            "age": -1.5685118824510285
+          },
+          "stderr": {
+            "const": 542040.8623247955,
+            "nt_pro_bnp_value": 1518.6222079677357,
+            "age": 8354.007271995875
+          },
+          "iterations": 28,
+          "converged": true
+        },
+        "CONDITION_AFIB2": {
+          "status": "success",
+          "coefficients": {
+            "const": -0.1784447013536634,
+            "nt_pro_bnp_value": -0.002157481367664343,
+            "age": -0.011170668492765205
+          },
+          "stderr": {
+            "const": 1.3860788276727636,
+            "nt_pro_bnp_value": 0.0019686126298401945,
+            "age": 0.038856790334034615
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS2": {
+          "status": "success",
+          "coefficients": {
+            "const": -92.50964166066287,
+            "nt_pro_bnp_value": 0.3482298481775752,
+            "age": -0.022461786855674317
+          },
+          "stderr": {
+            "const": 522884.8118836967,
+            "nt_pro_bnp_value": 478.43661394321964,
+            "age": 18918.085236794315
+          },
+          "iterations": 26,
+          "converged": true
+        },
+        "CONDITION_AFIB3": {
+          "status": "success",
+          "coefficients": {
+            "const": -14.196405928682157,
+            "nt_pro_bnp_value": 0.08381066573209664,
+            "age": 0.12365556217379259
+          },
+          "stderr": {
+            "const": 7.4129868477412915,
+            "nt_pro_bnp_value": 0.040241009180984944,
+            "age": 0.09566088963918686
+          },
+          "iterations": 8,
+          "converged": true
+        }
+      }
+    },
+    "11_Females_Age_51_80": {
+      "status": "completed",
+      "n_records": 54,
+      "analyses": {
+        "CONDITIONTEST": {
+          "status": "success",
+          "coefficients": {
+            "const": 5.192460298679184,
+            "nt_pro_bnp_value": -0.06151428047033655,
+            "age": -0.016260997645975505
+          },
+          "stderr": {
+            "const": 4.661104171966743,
+            "nt_pro_bnp_value": 0.021880878575337454,
+            "age": 0.06284964187987323
+          },
+          "iterations": 10,
+          "converged": true
+        },
+        "CONDITION_AFIB": {
+          "status": "success",
+          "coefficients": {
+            "const": 0.35005460884886885,
+            "nt_pro_bnp_value": -0.0017781694990466597,
+            "age": -0.024056600752665424
+          },
+          "stderr": {
+            "const": 2.6695130748442852,
+            "nt_pro_bnp_value": 0.0023879383717355534,
+            "age": 0.04283139033722917
+          },
+          "iterations": 6,
+          "converged": true
+        },
+        "CONDITION_HIS": {
+          "status": "success",
+          "coefficients": {
+            "const": -1582.6958978278801,
+            "nt_pro_bnp_value": 1.7650365481693588,
+            "age": 14.635960944577867
+          },
+          "stderr": {
+            "const": 2295733.8437407035,
+            "nt_pro_bnp_value": 1615.9606269186438,
+            "age": 31505.790239701157
+          },
+          "iterations": 28,
+          "converged": true
+        },
+        "CONDITION_AFIB2": {
+          "status": "success",
+          "coefficients": {
+            "const": 2.7852875652345763,
+            "nt_pro_bnp_value": -0.0018138396211984534,
+            "age": -0.051981349052738615
+          },
+          "stderr": {
+            "const": 3.1265163177575848,
+            "nt_pro_bnp_value": 0.002120439899662861,
+            "age": 0.04946907754452974
+          },
+          "iterations": 5,
+          "converged": true
+        },
+        "CONDITION_HIS2": {
+          "status": "success",
+          "coefficients": {
+            "const": -129.867516774762,
+            "nt_pro_bnp_value": 0.27537893703843347,
+            "age": 0.893130888988518
+          },
+          "stderr": {
+            "const": 474737.8968498407,
+            "nt_pro_bnp_value": 337.60577426603646,
+            "age": 7113.815813784408
+          },
+          "iterations": 25,
+          "converged": true
+        },
+        "CONDITION_AFIB3": {
+          "status": "success",
+          "coefficients": {
+            "const": -372.52987289814104,
+            "nt_pro_bnp_value": 3.0463805707331546,
+            "age": 1.2385113753911103
+          },
+          "stderr": {
+            "const": 1248750.239060074,
+            "nt_pro_bnp_value": 3069.703184929509,
+            "age": 20295.849769661698
+          },
+          "iterations": 26,
+          "converged": true
+        }
+      }
+    },
+    "12_Females_Age_81_Inf": {
+      "status": "completed",
+      "n_records": 53,
+      "analyses": {
+        "CONDITIONTEST": {
+          "status": "success",
+          "coefficients": {
+            "const": -10.48633784915888,
+            "nt_pro_bnp_value": -0.021509844185711516,
+            "age": 0.13525162647825137
+          },
+          "stderr": {
+            "const": 6.565870640298248,
+            "nt_pro_bnp_value": 0.008168525061555706,
+            "age": 0.07495861471541027
+          },
+          "iterations": 9,
+          "converged": true
+        },
+        "CONDITION_AFIB": {
+          "status": "success",
+          "coefficients": {
+            "const": 4.205126599158525,
+            "nt_pro_bnp_value": -0.003030450015492644,
+            "age": -0.057016384228542244
+          },
+          "stderr": {
+            "const": 5.519984687438811,
+            "nt_pro_bnp_value": 0.00243420114302498,
+            "age": 0.06276567041628553
+          },
+          "iterations": 7,
+          "converged": true
+        },
+        "CONDITION_HIS": {
+          "status": "success",
+          "coefficients": {
+            "const": -134.80055851653168,
+            "nt_pro_bnp_value": 0.15942161242182762,
+            "age": 0.6514831286330028
+          },
+          "stderr": {
+            "const": 585288.9345509815,
+            "nt_pro_bnp_value": 179.48722621361816,
+            "age": 6466.627676911851
+          },
+          "iterations": 25,
+          "converged": true
+        },
+        "CONDITION_AFIB2": {
+          "status": "success",
+          "coefficients": {
+            "const": 11.62224286041418,
+            "nt_pro_bnp_value": -0.002996241617460156,
+            "age": -0.13076776344063745
+          },
+          "stderr": {
+            "const": 6.872161124996612,
+            "nt_pro_bnp_value": 0.0019129961182333174,
+            "age": 0.07692776437577584
+          },
+          "iterations": 7,
+          "converged": true
+        },
+        "CONDITION_HIS2": {
+          "status": "success",
+          "coefficients": {
+            "const": -52.30317112521377,
+            "nt_pro_bnp_value": 0.12050169499708993,
+            "age": 0.03844387121320935
+          },
+          "stderr": {
+            "const": 376908.2357686712,
+            "nt_pro_bnp_value": 110.22548640697114,
+            "age": 4009.9775512969363
+          },
+          "iterations": 24,
+          "converged": true
+        },
+        "CONDITION_AFIB3": {
+          "status": "success",
+          "coefficients": {
+            "const": 37.02208664157352,
+            "nt_pro_bnp_value": 0.036347934482143164,
+            "age": -0.45600994515900256
+          },
+          "stderr": {
+            "const": 25.16809690334371,
+            "nt_pro_bnp_value": 0.020345220155619567,
+            "age": 0.2945242872719043
+          },
+          "iterations": 8,
+          "converged": true
+        }
+      }
     }
   }
 }
