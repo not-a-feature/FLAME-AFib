@@ -1,114 +1,114 @@
 {
   "overall_status": "completed",
   "aggregated_summary": {
-    "total_records": 100,
-    "nt_pro_bnp_weighted_mean": 44.512100000000004,
-    "age_weighted_mean": 22.85,
-    "total_atrial_fibrillation": 29,
-    "total_heart_failure": 13,
+    "total_records": 196,
+    "nt_pro_bnp_weighted_mean": 168.5144387755102,
+    "age_weighted_mean": 22.821428571428573,
+    "total_atrial_fibrillation": 24,
+    "total_heart_failure": 24,
     "n_nodes": 2
   },
   "aggregated_models": {
     "CONDITIONTEST": {
       "status": "success",
       "coefficients": {
-        "intercept": 2.2592163708856634,
-        "nt_pro_bnp_value": -0.06723781991291751,
-        "age": -0.10920822807830945,
-        "gender": -6.186972924430072
+        "intercept": 1.3937093212597997,
+        "nt_pro_bnp_value": -0.04204286842895199,
+        "age": 0.08023596102555479,
+        "gender": 1.4517471883788762
       },
       "stderr": {
-        "intercept": 5.148770061795306,
-        "nt_pro_bnp_value": 0.03505616339683324,
-        "age": 0.22004211936543458,
-        "gender": 8.069020838982942
+        "intercept": 2.784514554096064,
+        "nt_pro_bnp_value": 0.006537085133918914,
+        "age": 0.12356755636046556,
+        "gender": 0.5567966893222934
       },
-      "iterations": 8,
+      "iterations": 9,
       "converged": true
     },
     "CONDITION_AFIB": {
       "status": "success",
       "coefficients": {
-        "intercept": -3.021236203603038,
-        "nt_pro_bnp_value": 0.015780257737172978,
-        "age": 0.031165295731477475,
-        "gender": 1.2448586872419514
+        "intercept": -1.0287100539800842,
+        "nt_pro_bnp_value": -0.0009349245636914218,
+        "age": -0.050613201852807134,
+        "gender": 0.7084040037791871
       },
       "stderr": {
-        "intercept": 3.3417212962814182,
-        "nt_pro_bnp_value": 0.007430574881882618,
-        "age": 0.14493584351461666,
-        "gender": 0.5264161219549996
+        "intercept": 2.869269908848039,
+        "nt_pro_bnp_value": 0.001165793788139455,
+        "age": 0.1263656085197866,
+        "gender": 0.44610092668720147
       },
-      "iterations": 4,
+      "iterations": 6,
       "converged": true
     },
     "CONDITION_HIS": {
       "status": "success",
       "coefficients": {
-        "intercept": -2.1495363679459483,
-        "nt_pro_bnp_value": 0.01191257780031996,
-        "age": -0.02463239189959591,
-        "gender": 0.36514369853636636
+        "intercept": -49.85252531912086,
+        "nt_pro_bnp_value": 0.1322512821304883,
+        "age": 0.268492805312146,
+        "gender": -8.786181563346462
       },
       "stderr": {
-        "intercept": 3.977862201863751,
-        "nt_pro_bnp_value": 0.006925265504081998,
-        "age": 0.17421442832162604,
-        "gender": 0.6833686302020294
+        "intercept": 28.14453180661525,
+        "nt_pro_bnp_value": 0.08774220594475718,
+        "age": 0.7221436383620936,
+        "gender": 6.12264097331529
       },
-      "iterations": 5,
+      "iterations": 14,
       "converged": true
     },
     "CONDITION_AFIB2": {
       "status": "success",
       "coefficients": {
-        "intercept": -1.8941807259059054,
-        "nt_pro_bnp_value": 0.02018896713038351,
-        "age": -0.007885397835284011,
-        "gender": 0.9747265286606207
+        "intercept": -0.4436137408190762,
+        "nt_pro_bnp_value": -0.0007139691933638168,
+        "age": -0.06144107305485347,
+        "gender": 0.605520202259556
       },
       "stderr": {
-        "intercept": 3.430801509255173,
-        "nt_pro_bnp_value": 0.009254073255717565,
-        "age": 0.1493274981485623,
-        "gender": 0.5739252469176263
+        "intercept": 3.022091114631446,
+        "nt_pro_bnp_value": 0.0010115009711543527,
+        "age": 0.13278374770527265,
+        "gender": 0.4562049869380047
       },
-      "iterations": 4,
+      "iterations": 6,
       "converged": true
     },
     "CONDITION_HIS2": {
       "status": "success",
       "coefficients": {
-        "intercept": -0.0069184790102656425,
-        "nt_pro_bnp_value": 0.016746249261616802,
-        "age": -0.1383464610656609,
-        "gender": 0.5493019853018092
+        "intercept": -43.199030183907645,
+        "nt_pro_bnp_value": 0.21573145354096465,
+        "age": -0.4690740166010045,
+        "gender": -12.02460972216858
       },
       "stderr": {
-        "intercept": 4.4126040620295655,
-        "nt_pro_bnp_value": 0.008840553026976986,
-        "age": 0.19881232763739665,
-        "gender": 0.8383706636556215
+        "intercept": 37608.8848525869,
+        "nt_pro_bnp_value": 27.677911053423855,
+        "age": 1547.74435921199,
+        "gender": 5474.291749709473
       },
-      "iterations": 5,
+      "iterations": 22,
       "converged": true
     },
     "CONDITION_AFIB3": {
       "status": "success",
       "coefficients": {
-        "intercept": -3.821515423638054,
-        "nt_pro_bnp_value": 0.050537749160752404,
-        "age": 0.04069281022455798,
-        "gender": 0.9342946652606371
+        "intercept": -2.9618674580321547,
+        "nt_pro_bnp_value": 0.047829559364130365,
+        "age": -0.07125137043936769,
+        "gender": -1.9260614156148956
       },
       "stderr": {
-        "intercept": 4.197976163583908,
-        "nt_pro_bnp_value": 0.018105849685029388,
-        "age": 0.1772003076905622,
-        "gender": 0.6640371530993618
+        "intercept": 4.16113776779886,
+        "nt_pro_bnp_value": 0.009379214447906655,
+        "age": 0.18430040999307004,
+        "gender": 0.873082664538591
       },
-      "iterations": 5,
+      "iterations": 7,
       "converged": true
     }
   }

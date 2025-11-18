@@ -43,8 +43,8 @@ __version__ = "0.0.0"
 
 # S3 object keys to analyze (must be present in each node's bucket)
 # Set to None to analyze all CSV files
-COHORT_KEY = "Cohort_extended.csv"
-DIAGNOSES_KEY = "Diagnoses_extended.csv"
+COHORT_KEY = "cohort.csv"
+DIAGNOSES_KEY = "diagnoses.csv"
 
 CSV_S3_KEYS: List[str] | None = [COHORT_KEY, DIAGNOSES_KEY]
 

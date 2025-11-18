@@ -41,8 +41,8 @@ warnings.filterwarnings("ignore")
 __author__ = "Jules Kreuer, jules.kreuer@uni-tuebingen.de"
 __version__ = "0.0.0"
 
-COHORT_KEY = "Cohort_extended.csv"
-DIAGNOSES_KEY = "Diagnoses_extended.csv"
+COHORT_KEY = "cohort.csv"
+DIAGNOSES_KEY = "diagnoses.csv"
 
 
 class AFibAnalyzer(AFibAnalyzerMixin):
