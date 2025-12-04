@@ -264,23 +264,19 @@ class AFibAnalyzerMixin:
         # Use 'const' to match statsmodels naming convention
         predictor_names = ["const"] + predictors
         beta_array = np.array([beta[pred] for pred in predictor_names])
-        eta = X @ beta_array
-        mu = 1 / (1 + np.exp(-eta))
 
-        # Clip mu to avoid numerical instability
-        # Use 1e-15 to allow for larger coefficients (matching statsmodels behavior)
-        mu = np.clip(mu, 1e-15, 1 - 1e-15)
+        model = sm.GLM(y, X, family=sm.families.Binomial())
 
-        # Calculate weights for info matrix
-        W_diag = mu * (1 - mu)
-        W = np.diag(W_diag)
+        # Calculate score and hessian at current beta
+        score_vector = model.score(beta_array)
+        hessian = model.hessian(beta_array)
 
-        # Score vector and information matrix
-        score_vector = X.T @ (y - mu)
-        info_matrix = X.T @ W @ X
+        # Fisher Information Matrix is -Hessian for canonical link (Logit)
+        info_matrix = -hessian
 
-        # Deviance calculation
-        deviance = -2 * np.sum(y * np.log(mu) + (1 - y) * np.log(1 - mu))
+        # Calculate deviance
+        mu = model.predict(beta_array)
+        deviance = model.family.deviance(y, mu)
 
         return {
             "score_vector": score_vector.tolist(),
