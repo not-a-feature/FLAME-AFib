@@ -7,9 +7,11 @@ fitting on pooled data.
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import re
+import sys
 from typing import Any, Dict, List, Tuple
 
 import numpy as np
@@ -216,10 +218,23 @@ def print_summary_comparison(local_data: Dict[str, Any], direct_data: Dict[str, 
 
 def main():
     """Load and compare results from local and direct analysis."""
+    parser = argparse.ArgumentParser(description="Compare two result JSON files (local vs direct).")
+    parser.add_argument(
+        "local",
+        nargs="?",
+        default="output/local.json",
+        help="Path to local (federated) results JSON (default: %(default)s)",
+    )
+    parser.add_argument(
+        "direct",
+        nargs="?",
+        default="output/direct.json",
+        help="Path to direct GLM results JSON (default: %(default)s)",
+    )
 
-    local_path = "output/local.json"
-    # local_path = "output/federated.json"
-    direct_path = "output/direct.json"
+    args = parser.parse_args()
+    local_path = args.local
+    direct_path = args.direct
 
     print(f"Local:  {local_path}")
     print(f"Direct: {direct_path}")
@@ -229,10 +244,8 @@ def main():
         direct_data = load_json_file(direct_path)
     except FileNotFoundError as e:
         print(f"\n[ERROR] {e}")
-        print(
-            "\nPlease run both local_analysis.py and direct_glm.py first to generate the output files."
-        )
-        return
+        print("\nPlease generate the output files before comparing.")
+        sys.exit(2)
 
     print(f"\n[INFO] Files loaded successfully")
 
@@ -247,10 +260,12 @@ def main():
         print("\n✓ SUCCESS: Results match within tolerance!")
         print(f"  Relative tolerance: {RELATIVE_TOLERANCE}")
         print(f"  Absolute tolerance: {ABSOLUTE_TOLERANCE}")
+        sys.exit(0)
     else:
         print(f"\n✗ FAILURE: Found {len(errors)} differences:")
         for i, error in enumerate(errors, 1):
             print(f"  {i}. {error}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
