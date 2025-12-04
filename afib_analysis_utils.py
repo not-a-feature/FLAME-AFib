@@ -478,6 +478,13 @@ class AFibAggregatorMixin:
         total_score_vector = np.sum([np.array(it["score_vector"]) for it in all_iterations], axis=0)
         total_deviance = np.sum([it["deviance"] for it in all_iterations])
 
+        # Check for NaNs or Infs
+        if not np.all(np.isfinite(total_info_matrix)) or not np.all(
+            np.isfinite(total_score_vector)
+        ):
+            state["error"] = "Numerical instability: NaNs or Infs in aggregated matrices"
+            return False
+
         # IRLS update step
         try:
             # Try standard inversion/solve first to match statsmodels behavior on near-singular matrices
@@ -486,9 +493,13 @@ class AFibAggregatorMixin:
             # Use pinv for stderr calculation to match statsmodels which uses pinv for covariance
             inv_info_matrix = np.linalg.pinv(total_info_matrix)
         except np.linalg.LinAlgError:
-            # Fallback to pseudo-inverse for truly singular matrices
-            inv_info_matrix = np.linalg.pinv(total_info_matrix)
-            beta_update = inv_info_matrix @ total_score_vector
+            try:
+                # Fallback to pseudo-inverse for truly singular matrices
+                inv_info_matrix = np.linalg.pinv(total_info_matrix)
+                beta_update = inv_info_matrix @ total_score_vector
+            except np.linalg.LinAlgError:
+                state["error"] = "Linear algebra error: SVD did not converge"
+                return False
 
         # Convert current beta dict to array in correct order
         if not state["beta"]:

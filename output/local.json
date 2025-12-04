@@ -19,7 +19,7 @@
     },
     "total_cohorts": 12,
     "total_analyses": 72,
-    "successful_analyses": 72
+    "successful_analyses": 50
   },
   "cohort_results": {
     "01_FullCohort": {
@@ -29,16 +29,16 @@
         "CONDITIONTEST": {
           "status": "success",
           "coefficients": {
-            "const": 0.6879096121794365,
+            "const": 0.6879096121794414,
             "nt_pro_bnp_value": -0.013303470252425157,
-            "age": 0.036723248789575336,
-            "gender": -0.24086326140598233
+            "age": 0.03672324878957527,
+            "gender": -0.24086326140598327
           },
           "stderr": {
-            "const": 0.36778659623207977,
-            "nt_pro_bnp_value": 0.001500041127380376,
-            "age": 0.0062894259927177365,
-            "gender": 0.24320438825639332
+            "const": 0.3677865962318746,
+            "nt_pro_bnp_value": 0.0015000411273803974,
+            "age": 0.006289425992715958,
+            "gender": 0.24320438825637575
           },
           "iterations": 7,
           "converged": true
@@ -46,16 +46,16 @@
         "CONDITION_AFIB": {
           "status": "success",
           "coefficients": {
-            "const": -1.6357379781230377,
+            "const": -1.6357379781230381,
             "nt_pro_bnp_value": -0.0010144006927273303,
-            "age": -0.00023365731352862466,
-            "gender": 0.17228705385500098
+            "age": -0.00023365731352862083,
+            "gender": 0.17228705385500137
           },
           "stderr": {
-            "const": 0.41277511067177314,
-            "nt_pro_bnp_value": 0.0006839013902848221,
-            "age": 0.0059303429636627086,
-            "gender": 0.27977843236015865
+            "const": 0.41277511067182787,
+            "nt_pro_bnp_value": 0.0006839013902848183,
+            "age": 0.0059303429636634285,
+            "gender": 0.2797784323601664
           },
           "iterations": 6,
           "converged": true
@@ -63,16 +63,16 @@
         "CONDITION_HIS": {
           "status": "success",
           "coefficients": {
-            "const": -14.698636236341672,
-            "nt_pro_bnp_value": 0.032099576477596016,
-            "age": -0.0668013510781948,
-            "gender": 2.0791210722046234
+            "const": -14.698636236341692,
+            "nt_pro_bnp_value": 0.03209957647759606,
+            "age": -0.06680135107819488,
+            "gender": 2.0791210722046256
           },
           "stderr": {
-            "const": 3.6458440823833658,
-            "nt_pro_bnp_value": 0.007760668587164349,
-            "age": 0.027816205647475008,
-            "gender": 1.3563985419358413
+            "const": 3.64584408237361,
+            "nt_pro_bnp_value": 0.0077606685871476015,
+            "age": 0.02781620564747199,
+            "gender": 1.3563985419355982
           },
           "iterations": 11,
           "converged": true
@@ -81,49 +81,37 @@
           "status": "success",
           "coefficients": {
             "const": -1.2324253643680814,
-            "nt_pro_bnp_value": -0.0009820798012012584,
-            "age": -0.0012130061484354707,
-            "gender": 0.2491874012120535
+            "nt_pro_bnp_value": -0.0009820798012012601,
+            "age": -0.0012130061484354557,
+            "gender": 0.24918740121205296
           },
           "stderr": {
-            "const": 0.42924776879068227,
-            "nt_pro_bnp_value": 0.0006130667374286618,
-            "age": 0.005982218791846454,
-            "gender": 0.29170622297390714
+            "const": 0.4292477687905056,
+            "nt_pro_bnp_value": 0.0006130667374286736,
+            "age": 0.005982218791844473,
+            "gender": 0.29170622297387905
           },
           "iterations": 6,
           "converged": true
         },
         "CONDITION_HIS2": {
-          "status": "success",
-          "coefficients": {
-            "const": -17.388894614146505,
-            "nt_pro_bnp_value": 0.06466841921859086,
-            "age": -0.2238763074009083,
-            "gender": 2.3565603347755735
-          },
-          "stderr": {
-            "const": 10.393253877830732,
-            "nt_pro_bnp_value": 0.04159220522791211,
-            "age": 0.16274455519901973,
-            "gender": 2.7579992409327345
-          },
-          "iterations": 14,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB3": {
           "status": "success",
           "coefficients": {
-            "const": -1.7973172893558569,
-            "nt_pro_bnp_value": 0.013170508355880652,
-            "age": -0.03433535727884731,
-            "gender": 0.11152059674432915
+            "const": -1.7973172893558507,
+            "nt_pro_bnp_value": 0.013170508355880638,
+            "age": -0.034335357278847345,
+            "gender": 0.1115205967443274
           },
           "stderr": {
-            "const": 0.5015660586717825,
-            "nt_pro_bnp_value": 0.002071681587755893,
-            "age": 0.008141079353762253,
-            "gender": 0.3359828491990999
+            "const": 0.5015660586717908,
+            "nt_pro_bnp_value": 0.002071681587755888,
+            "age": 0.008141079353762284,
+            "gender": 0.3359828491991006
           },
           "iterations": 6,
           "converged": true
@@ -137,14 +125,14 @@
         "CONDITIONTEST": {
           "status": "success",
           "coefficients": {
-            "const": 0.7559760748578866,
-            "nt_pro_bnp_value": -0.01515133713291451,
-            "age": 0.0415908503996185
+            "const": 0.7559760748578863,
+            "nt_pro_bnp_value": -0.0151513371329145,
+            "age": 0.04159085039961846
           },
           "stderr": {
-            "const": 0.5023229487331106,
-            "nt_pro_bnp_value": 0.002224779522761064,
-            "age": 0.008618135028853995
+            "const": 0.5023229487332491,
+            "nt_pro_bnp_value": 0.0022247795227612124,
+            "age": 0.008618135028854062
           },
           "iterations": 8,
           "converged": true
@@ -152,74 +140,54 @@
         "CONDITION_AFIB": {
           "status": "success",
           "coefficients": {
-            "const": -1.8467893185571405,
-            "nt_pro_bnp_value": -0.0007626302610977913,
-            "age": 0.0020853419984301577
+            "const": -1.8467893185571413,
+            "nt_pro_bnp_value": -0.0007626302610977921,
+            "age": 0.002085341998430178
           },
           "stderr": {
-            "const": 0.5562010988011046,
-            "nt_pro_bnp_value": 0.0008909117864917636,
-            "age": 0.008085281312168088
+            "const": 0.5562010988007131,
+            "nt_pro_bnp_value": 0.000890911786491737,
+            "age": 0.008085281312163791
           },
           "iterations": 6,
           "converged": true
         },
         "CONDITION_HIS": {
-          "status": "success",
-          "coefficients": {
-            "const": -50.48680550445305,
-            "nt_pro_bnp_value": 0.09727062987302723,
-            "age": -0.06650774772613315
-          },
-          "stderr": {
-            "const": 42.51845156729629,
-            "nt_pro_bnp_value": 0.08243362175018032,
-            "age": 0.0827602102212251
-          },
-          "iterations": 15,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB2": {
           "status": "success",
           "coefficients": {
-            "const": -1.2468714404565617,
-            "nt_pro_bnp_value": -0.0006688697358787109,
-            "age": -0.0022502109727342854
+            "const": -1.2468714404565593,
+            "nt_pro_bnp_value": -0.0006688697358787122,
+            "age": -0.00225021097273431
           },
           "stderr": {
-            "const": 0.5761560186172539,
-            "nt_pro_bnp_value": 0.0007988715139391768,
-            "age": 0.008324284139673023
+            "const": 0.5761560186171849,
+            "nt_pro_bnp_value": 0.0007988715139391658,
+            "age": 0.008324284139672558
           },
           "iterations": 6,
           "converged": true
         },
         "CONDITION_HIS2": {
-          "status": "success",
-          "coefficients": {
-            "const": -125.75340994457115,
-            "nt_pro_bnp_value": 0.2971665902895241,
-            "age": -0.2511683282392974
-          },
-          "stderr": {
-            "const": 143574.18253184046,
-            "nt_pro_bnp_value": 274.17727945092145,
-            "age": 1264.6996425316422
-          },
-          "iterations": 27,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB3": {
           "status": "success",
           "coefficients": {
-            "const": -2.8227038050277486,
-            "nt_pro_bnp_value": 0.018069233477648425,
-            "age": -0.035565037602604675
+            "const": -2.8227038050277478,
+            "nt_pro_bnp_value": 0.01806923347764842,
+            "age": -0.03556503760260468
           },
           "stderr": {
-            "const": 0.8257925752596977,
-            "nt_pro_bnp_value": 0.0036406784836849294,
-            "age": 0.011451931465182478
+            "const": 0.8257925752600356,
+            "nt_pro_bnp_value": 0.003640678483686318,
+            "age": 0.011451931465180963
           },
           "iterations": 7,
           "converged": true
@@ -233,14 +201,14 @@
         "CONDITIONTEST": {
           "status": "success",
           "coefficients": {
-            "const": 0.45633192612935863,
-            "nt_pro_bnp_value": -0.011408311237187005,
-            "age": 0.03031931169208075
+            "const": 0.4563319261293573,
+            "nt_pro_bnp_value": -0.011408311237187017,
+            "age": 0.030319311692080814
           },
           "stderr": {
-            "const": 0.45760306368093784,
-            "nt_pro_bnp_value": 0.002021013183564234,
-            "age": 0.009301248487285366
+            "const": 0.45760306368095505,
+            "nt_pro_bnp_value": 0.002021013183564248,
+            "age": 0.00930124848728531
           },
           "iterations": 7,
           "converged": true
@@ -248,14 +216,14 @@
         "CONDITION_AFIB": {
           "status": "success",
           "coefficients": {
-            "const": -1.2669426695185515,
-            "nt_pro_bnp_value": -0.0012778290018075214,
-            "age": -0.0024742988940972253
+            "const": -1.2669426695185517,
+            "nt_pro_bnp_value": -0.001277829001807522,
+            "age": -0.0024742988940972205
           },
           "stderr": {
-            "const": 0.5225752690334688,
-            "nt_pro_bnp_value": 0.0010552073555109651,
-            "age": 0.008858700422171099
+            "const": 0.5225752690336565,
+            "nt_pro_bnp_value": 0.0010552073555109697,
+            "age": 0.008858700422173318
           },
           "iterations": 6,
           "converged": true
@@ -263,14 +231,14 @@
         "CONDITION_HIS": {
           "status": "success",
           "coefficients": {
-            "const": -10.544455325964533,
+            "const": -10.544455325964536,
             "nt_pro_bnp_value": 0.037065407257308405,
-            "age": -0.12952521447019597
+            "age": -0.12952521447019594
           },
           "stderr": {
-            "const": 3.6406375621618383,
-            "nt_pro_bnp_value": 0.013331185421226709,
-            "age": 0.06215115550386868
+            "const": 3.640637562175935,
+            "nt_pro_bnp_value": 0.013331185421272698,
+            "age": 0.06215115550397116
           },
           "iterations": 11,
           "converged": true
@@ -278,44 +246,34 @@
         "CONDITION_AFIB2": {
           "status": "success",
           "coefficients": {
-            "const": -0.9737757059297294,
+            "const": -0.9737757059297296,
             "nt_pro_bnp_value": -0.001375656501027785,
-            "age": 0.000389885920748579
+            "age": 0.0003898859207485842
           },
           "stderr": {
-            "const": 0.5224364283699053,
-            "nt_pro_bnp_value": 0.000952594147805494,
-            "age": 0.008669850777219695
+            "const": 0.5224364283700157,
+            "nt_pro_bnp_value": 0.0009525941478054948,
+            "age": 0.008669850777220831
           },
           "iterations": 6,
           "converged": true
         },
         "CONDITION_HIS2": {
-          "status": "success",
-          "coefficients": {
-            "const": -796.4698239115561,
-            "nt_pro_bnp_value": 4.192780141876047,
-            "age": -16.793329064546942
-          },
-          "stderr": {
-            "const": 746190.8653615969,
-            "nt_pro_bnp_value": 3951.3559159689344,
-            "age": 15967.399043136882
-          },
-          "iterations": 31,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB3": {
           "status": "success",
           "coefficients": {
-            "const": -1.1759286994423845,
-            "nt_pro_bnp_value": 0.010387615606270974,
-            "age": -0.03308786595407006
+            "const": -1.1759286994423868,
+            "nt_pro_bnp_value": 0.010387615606270977,
+            "age": -0.03308786595407004
           },
           "stderr": {
-            "const": 0.5706882932893217,
-            "nt_pro_bnp_value": 0.002666889422854795,
-            "age": 0.012051043668259664
+            "const": 0.5706882932892947,
+            "nt_pro_bnp_value": 0.002666889422854688,
+            "age": 0.012051043668260928
           },
           "iterations": 6,
           "converged": true
@@ -329,16 +287,16 @@
         "CONDITIONTEST": {
           "status": "success",
           "coefficients": {
-            "const": 1.524641437469129,
-            "nt_pro_bnp_value": -0.01107838962782984,
-            "age": 0.005522520217174197,
-            "gender": -0.11251056519729692
+            "const": 1.524641437469125,
+            "nt_pro_bnp_value": -0.011078389627829834,
+            "age": 0.005522520217174278,
+            "gender": -0.1125105651972962
           },
           "stderr": {
-            "const": 0.8143437748394301,
-            "nt_pro_bnp_value": 0.0021973414485971943,
-            "age": 0.020956921431819153,
-            "gender": 0.40081611544195467
+            "const": 0.8143437748393791,
+            "nt_pro_bnp_value": 0.002197341448597305,
+            "age": 0.020956921431817047,
+            "gender": 0.4008161154419551
           },
           "iterations": 7,
           "converged": true
@@ -346,84 +304,60 @@
         "CONDITION_AFIB": {
           "status": "success",
           "coefficients": {
-            "const": -0.5543471280400621,
-            "nt_pro_bnp_value": -0.001460761162270603,
-            "age": -0.035489913933598384,
-            "gender": 0.2255802479629324
+            "const": -0.5543471280400651,
+            "nt_pro_bnp_value": -0.0014607611622706026,
+            "age": -0.03548991393359831,
+            "gender": 0.225580247962933
           },
           "stderr": {
-            "const": 0.9448295899871904,
-            "nt_pro_bnp_value": 0.0012161466956590685,
-            "age": 0.02647593849042598,
-            "gender": 0.48828346257376104
+            "const": 0.9448295899866593,
+            "nt_pro_bnp_value": 0.0012161466956590301,
+            "age": 0.026475938490415043,
+            "gender": 0.48828346257372174
           },
           "iterations": 6,
           "converged": true
         },
         "CONDITION_HIS": {
-          "status": "success",
-          "coefficients": {
-            "const": -1357.2378109620822,
-            "nt_pro_bnp_value": 1.8791570796480244,
-            "age": 9.982446690949239,
-            "gender": 295.30498746755376
-          },
-          "stderr": {
-            "const": 1433181.7213316802,
-            "nt_pro_bnp_value": 1948.4882689980386,
-            "age": 11588.398242557532,
-            "gender": 313879.5373589792
-          },
-          "iterations": 30,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB2": {
           "status": "success",
           "coefficients": {
-            "const": -0.2542530873360405,
-            "nt_pro_bnp_value": -0.0014063240739106166,
-            "age": -0.030277637312169755,
-            "gender": 0.05629007756681205
+            "const": -0.25425308733604585,
+            "nt_pro_bnp_value": -0.0014063240739106157,
+            "age": -0.030277637312169616,
+            "gender": 0.05629007756681301
           },
           "stderr": {
-            "const": 1.0025475593590234,
-            "nt_pro_bnp_value": 0.0010869445778080291,
-            "age": 0.027426155588406283,
-            "gender": 0.5095211010218222
+            "const": 1.0025475593596613,
+            "nt_pro_bnp_value": 0.0010869445778080486,
+            "age": 0.027426155588421985,
+            "gender": 0.5095211010218692
           },
           "iterations": 6,
           "converged": true
         },
         "CONDITION_HIS2": {
-          "status": "success",
-          "coefficients": {
-            "const": -257.0534875964499,
-            "nt_pro_bnp_value": 0.6754130367428035,
-            "age": -0.5412225405132777,
-            "gender": 58.45609782353052
-          },
-          "stderr": {
-            "const": 354320.26180059696,
-            "nt_pro_bnp_value": 726.913909024898,
-            "age": 5006.096896253437,
-            "gender": 212815.67819802088
-          },
-          "iterations": 28,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB3": {
           "status": "success",
           "coefficients": {
-            "const": -1.849872994692838,
-            "nt_pro_bnp_value": 0.011808468361039747,
-            "age": -0.03609255898653166,
-            "gender": 0.3276872091652574
+            "const": -1.849872994692839,
+            "nt_pro_bnp_value": 0.01180846836103975,
+            "age": -0.03609255898653164,
+            "gender": 0.3276872091652577
           },
           "stderr": {
-            "const": 1.1702456505405572,
-            "nt_pro_bnp_value": 0.003488928211014223,
-            "age": 0.029487524763289783,
-            "gender": 0.583804213750979
+            "const": 1.1702456505407,
+            "nt_pro_bnp_value": 0.003488928211014257,
+            "age": 0.029487524763293207,
+            "gender": 0.5838042137509863
           },
           "iterations": 6,
           "converged": true
@@ -437,16 +371,16 @@
         "CONDITIONTEST": {
           "status": "success",
           "coefficients": {
-            "const": -2.168012287413817,
-            "nt_pro_bnp_value": -0.016589267860689056,
-            "age": 0.0889132959793095,
-            "gender": -0.5210094834678879
+            "const": -2.168012287413831,
+            "nt_pro_bnp_value": -0.01658926786068906,
+            "age": 0.08891329597930973,
+            "gender": -0.5210094834678877
           },
           "stderr": {
-            "const": 1.6349090108447248,
-            "nt_pro_bnp_value": 0.003103044878525714,
-            "age": 0.029094399901061684,
-            "gender": 0.4174498787727039
+            "const": 1.6349090108445945,
+            "nt_pro_bnp_value": 0.003103044878525603,
+            "age": 0.02909439990105879,
+            "gender": 0.41744987877270384
           },
           "iterations": 7,
           "converged": true
@@ -454,84 +388,60 @@
         "CONDITION_AFIB": {
           "status": "success",
           "coefficients": {
-            "const": -3.658196099264027,
-            "nt_pro_bnp_value": -0.0006404461506255391,
-            "age": 0.032862881829433976,
-            "gender": 0.338011054232548
+            "const": -3.6581960992640092,
+            "nt_pro_bnp_value": -0.0006404461506255376,
+            "age": 0.03286288182943372,
+            "gender": 0.33801105423254724
           },
           "stderr": {
-            "const": 1.6594116027144425,
-            "nt_pro_bnp_value": 0.0010970350321949298,
-            "age": 0.02555537030299351,
-            "gender": 0.431892655393114
+            "const": 1.6594116027124886,
+            "nt_pro_bnp_value": 0.0010970350321949113,
+            "age": 0.025555370302963495,
+            "gender": 0.43189265539311533
           },
           "iterations": 6,
           "converged": true
         },
         "CONDITION_HIS": {
-          "status": "success",
-          "coefficients": {
-            "const": -72.99235826718969,
-            "nt_pro_bnp_value": 0.39682637252011715,
-            "age": -2.5736248094974954,
-            "gender": 24.162571294607172
-          },
-          "stderr": {
-            "const": 265049.50876333617,
-            "nt_pro_bnp_value": 489.5076298137776,
-            "age": 4784.425001680001,
-            "gender": 128243.92948159059
-          },
-          "iterations": 28,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB2": {
           "status": "success",
           "coefficients": {
-            "const": -2.594606695458228,
-            "nt_pro_bnp_value": -0.0005115882057142478,
-            "age": 0.02161577256894498,
-            "gender": 0.47352957802553547
+            "const": -2.594606695458223,
+            "nt_pro_bnp_value": -0.0005115882057142459,
+            "age": 0.021615772568944897,
+            "gender": 0.4735295780255354
           },
           "stderr": {
-            "const": 1.801273653088449,
-            "nt_pro_bnp_value": 0.0010018298878452748,
-            "age": 0.027628759174582226,
-            "gender": 0.45296115700496414
+            "const": 1.801273653089076,
+            "nt_pro_bnp_value": 0.001001829887845298,
+            "age": 0.027628759174591684,
+            "gender": 0.4529611570049644
           },
           "iterations": 5,
           "converged": true
         },
         "CONDITION_HIS2": {
-          "status": "success",
-          "coefficients": {
-            "const": -61.97311874265903,
-            "nt_pro_bnp_value": 0.19872915649452239,
-            "age": -0.6362173979968001,
-            "gender": 6.508214984380555
-          },
-          "stderr": {
-            "const": 175129.6097205928,
-            "nt_pro_bnp_value": 204.4353246847349,
-            "age": 2587.0245597411385,
-            "gender": 61128.23249149533
-          },
-          "iterations": 26,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB3": {
           "status": "success",
           "coefficients": {
-            "const": -1.0191312036407054,
-            "nt_pro_bnp_value": 0.0173425261250991,
-            "age": -0.0570944898928152,
-            "gender": 0.613549277708085
+            "const": -1.019131203640695,
+            "nt_pro_bnp_value": 0.017342526125099123,
+            "age": -0.05709448989281543,
+            "gender": 0.6135492777080854
           },
           "stderr": {
-            "const": 2.246122628171513,
-            "nt_pro_bnp_value": 0.004059510976091413,
-            "age": 0.03807033781889938,
-            "gender": 0.5562663487408662
+            "const": 2.2461226281814137,
+            "nt_pro_bnp_value": 0.004059510976091679,
+            "age": 0.03807033781904133,
+            "gender": 0.5562663487408757
           },
           "iterations": 6,
           "converged": true
@@ -545,16 +455,16 @@
         "CONDITIONTEST": {
           "status": "success",
           "coefficients": {
-            "const": -3.0941566001196734,
-            "nt_pro_bnp_value": -0.016462777657379114,
-            "age": 0.08801254525323249,
-            "gender": 0.19406009142623765
+            "const": -3.0941566001196894,
+            "nt_pro_bnp_value": -0.01646277765737911,
+            "age": 0.08801254525323264,
+            "gender": 0.19406009142623803
           },
           "stderr": {
-            "const": 3.985484374677874,
-            "nt_pro_bnp_value": 0.003166411237030828,
-            "age": 0.045844827941744076,
-            "gender": 0.5067643635917414
+            "const": 3.985484374727653,
+            "nt_pro_bnp_value": 0.003166411237031178,
+            "age": 0.04584482794227932,
+            "gender": 0.5067643635920525
           },
           "iterations": 8,
           "converged": true
@@ -562,84 +472,60 @@
         "CONDITION_AFIB": {
           "status": "success",
           "coefficients": {
-            "const": -10.611909903883497,
-            "nt_pro_bnp_value": -0.0013120781181658672,
-            "age": 0.09725463639917996,
+            "const": -10.611909903883502,
+            "nt_pro_bnp_value": -0.0013120781181658677,
+            "age": 0.09725463639918001,
             "gender": -0.3205071586590221
           },
           "stderr": {
-            "const": 5.412544547874055,
-            "nt_pro_bnp_value": 0.0014548254402658423,
-            "age": 0.058465548836241506,
-            "gender": 0.6440392918128639
+            "const": 5.412544547806917,
+            "nt_pro_bnp_value": 0.001454825440265688,
+            "age": 0.05846554883551963,
+            "gender": 0.6440392918126917
           },
           "iterations": 7,
           "converged": true
         },
         "CONDITION_HIS": {
-          "status": "success",
-          "coefficients": {
-            "const": 1215.2533516182725,
-            "nt_pro_bnp_value": 1.4765707817109004,
-            "age": -22.604264808901387,
-            "gender": -7.4981949729214765
-          },
-          "stderr": {
-            "const": 1273709.9664215534,
-            "nt_pro_bnp_value": 1290.5501084608616,
-            "age": 20867.387174191652,
-            "gender": 278536.7504053403
-          },
-          "iterations": 29,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB2": {
           "status": "success",
           "coefficients": {
-            "const": -9.310840935715829,
-            "nt_pro_bnp_value": -0.0011693777199672617,
-            "age": 0.0854732622292039,
-            "gender": -0.21097621914018475
+            "const": -9.310840935715888,
+            "nt_pro_bnp_value": -0.0011693777199672647,
+            "age": 0.08547326222920454,
+            "gender": -0.2109762191401847
           },
           "stderr": {
-            "const": 5.282518609549323,
-            "nt_pro_bnp_value": 0.0012867455439479682,
-            "age": 0.05718615133835522,
-            "gender": 0.6535239116270176
+            "const": 5.282518609515186,
+            "nt_pro_bnp_value": 0.0012867455439480944,
+            "age": 0.057186151338000264,
+            "gender": 0.6535239116270051
           },
           "iterations": 6,
           "converged": true
         },
         "CONDITION_HIS2": {
-          "status": "success",
-          "coefficients": {
-            "const": 243.0698778702134,
-            "nt_pro_bnp_value": 0.3973905997320535,
-            "age": -5.068307939472284,
-            "gender": 5.531562145899854
-          },
-          "stderr": {
-            "const": 425359.3625119904,
-            "nt_pro_bnp_value": 400.5158467171711,
-            "age": 6249.296621680399,
-            "gender": 93137.07226308668
-          },
-          "iterations": 27,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB3": {
           "status": "success",
           "coefficients": {
-            "const": -4.438137862856977,
-            "nt_pro_bnp_value": 0.013950697007006097,
-            "age": -0.00689267624136883,
+            "const": -4.438137862857024,
+            "nt_pro_bnp_value": 0.01395069700700609,
+            "age": -0.00689267624136831,
             "gender": -1.2877722646574423
           },
           "stderr": {
-            "const": 5.4427982911871755,
-            "nt_pro_bnp_value": 0.004450528503946424,
-            "age": 0.061502305300837695,
-            "gender": 0.8705127900753113
+            "const": 5.4427982911715,
+            "nt_pro_bnp_value": 0.0044505285039467615,
+            "age": 0.061502305300685706,
+            "gender": 0.8705127900752968
           },
           "iterations": 7,
           "converged": true
@@ -653,14 +539,14 @@
         "CONDITIONTEST": {
           "status": "success",
           "coefficients": {
-            "const": -0.23377139454588877,
-            "nt_pro_bnp_value": -0.010251250986146354,
-            "age": 0.053521965052340845
+            "const": -0.2337713945458859,
+            "nt_pro_bnp_value": -0.010251250986146359,
+            "age": 0.05352196505234079
           },
           "stderr": {
-            "const": 1.0362038148106683,
-            "nt_pro_bnp_value": 0.0028262837518837976,
-            "age": 0.02922399057508929
+            "const": 1.0362038148106438,
+            "nt_pro_bnp_value": 0.0028262837518837685,
+            "age": 0.029223990575089537
           },
           "iterations": 7,
           "converged": true
@@ -668,74 +554,54 @@
         "CONDITION_AFIB": {
           "status": "success",
           "coefficients": {
-            "const": -0.07565013498961709,
+            "const": -0.07565013498961676,
             "nt_pro_bnp_value": -0.0016435181933631077,
-            "age": -0.0497759232526964
+            "age": -0.049775923252696405
           },
           "stderr": {
-            "const": 1.2623727786815937,
-            "nt_pro_bnp_value": 0.001790905125687711,
-            "age": 0.03739206522072651
+            "const": 1.2623727786815693,
+            "nt_pro_bnp_value": 0.0017909051256877083,
+            "age": 0.03739206522072596
           },
           "iterations": 7,
           "converged": true
         },
         "CONDITION_HIS": {
-          "status": "success",
-          "coefficients": {
-            "const": -299.1505846061837,
-            "nt_pro_bnp_value": 0.5433978326020955,
-            "age": 0.387543222021201
-          },
-          "stderr": {
-            "const": 409695.63700878207,
-            "nt_pro_bnp_value": 716.5588973781424,
-            "age": 3811.2160442400163
-          },
-          "iterations": 28,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB2": {
           "status": "success",
           "coefficients": {
-            "const": 0.8020366268275457,
-            "nt_pro_bnp_value": -0.0014544156757286025,
-            "age": -0.06300690886105335
+            "const": 0.8020366268275466,
+            "nt_pro_bnp_value": -0.0014544156757286023,
+            "age": -0.06300690886105338
           },
           "stderr": {
-            "const": 1.328905019424597,
-            "nt_pro_bnp_value": 0.001542593690236136,
-            "age": 0.03944015450127855
+            "const": 1.3289050194245091,
+            "nt_pro_bnp_value": 0.001542593690236129,
+            "age": 0.03944015450127625
           },
           "iterations": 6,
           "converged": true
         },
         "CONDITION_HIS2": {
-          "status": "success",
-          "coefficients": {
-            "const": -123.37738068748708,
-            "nt_pro_bnp_value": 0.20472099062724675,
-            "age": 0.9401159922186016
-          },
-          "stderr": {
-            "const": 227996.99952510616,
-            "nt_pro_bnp_value": 261.78827626678947,
-            "age": 5274.0871669133085
-          },
-          "iterations": 26,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB3": {
           "status": "success",
           "coefficients": {
-            "const": -0.43466763771042455,
-            "nt_pro_bnp_value": 0.011209279855846879,
-            "age": -0.0762301590674386
+            "const": -0.43466763771042516,
+            "nt_pro_bnp_value": 0.011209279855846872,
+            "age": -0.07623015906743856
           },
           "stderr": {
-            "const": 1.4614764223392027,
-            "nt_pro_bnp_value": 0.005134334062232998,
-            "age": 0.04313871540239281
+            "const": 1.4614764223399168,
+            "nt_pro_bnp_value": 0.005134334062233434,
+            "age": 0.043138715402404035
           },
           "iterations": 6,
           "converged": true
@@ -749,14 +615,14 @@
         "CONDITIONTEST": {
           "status": "success",
           "coefficients": {
-            "const": -1.2751717771565954,
+            "const": -1.2751717771565898,
             "nt_pro_bnp_value": -0.015514419472515481,
-            "age": 0.07165441891967253
+            "age": 0.07165441891967245
           },
           "stderr": {
-            "const": 2.1969576484112148,
-            "nt_pro_bnp_value": 0.0039029868878046417,
-            "age": 0.03760049543630642
+            "const": 2.1969576484136875,
+            "nt_pro_bnp_value": 0.003902986887804923,
+            "age": 0.037600495436348455
           },
           "iterations": 7,
           "converged": true
@@ -764,74 +630,54 @@
         "CONDITION_AFIB": {
           "status": "success",
           "coefficients": {
-            "const": -3.641769054379245,
-            "nt_pro_bnp_value": 4.724470305428151e-05,
-            "age": 0.029980889510629573
+            "const": -3.6417690543792403,
+            "nt_pro_bnp_value": 4.724470305428199e-05,
+            "age": 0.029980889510629494
           },
           "stderr": {
-            "const": 2.5017382002441457,
-            "nt_pro_bnp_value": 0.001554190395113947,
-            "age": 0.038954633585437264
+            "const": 2.5017382002454336,
+            "nt_pro_bnp_value": 0.0015541903951139446,
+            "age": 0.0389546335854567
           },
           "iterations": 6,
           "converged": true
         },
         "CONDITION_HIS": {
-          "status": "success",
-          "coefficients": {
-            "const": -73.06253521933336,
-            "nt_pro_bnp_value": 0.21315100586232788,
-            "age": -0.9916042982164186
-          },
-          "stderr": {
-            "const": 207254.84945402888,
-            "nt_pro_bnp_value": 191.49518103572242,
-            "age": 3264.4096115379994
-          },
-          "iterations": 26,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB2": {
           "status": "success",
           "coefficients": {
-            "const": -2.437337412001922,
-            "nt_pro_bnp_value": 0.0002825326437017044,
-            "age": 0.01624992424565222
+            "const": -2.4373374120019315,
+            "nt_pro_bnp_value": 0.0002825326437017035,
+            "age": 0.016249924245652365
           },
           "stderr": {
-            "const": 2.669199028456119,
-            "nt_pro_bnp_value": 0.0014731335756110202,
-            "age": 0.04174686188449631
+            "const": 2.6691990284524287,
+            "nt_pro_bnp_value": 0.001473133575610927,
+            "age": 0.04174686188443866
           },
           "iterations": 5,
           "converged": true
         },
         "CONDITION_HIS2": {
-          "status": "success",
-          "coefficients": {
-            "const": -36.76706946952566,
-            "nt_pro_bnp_value": 0.1282033374854103,
-            "age": -0.5629593155680995
-          },
-          "stderr": {
-            "const": 265654.3897079038,
-            "nt_pro_bnp_value": 134.25731120743853,
-            "age": 4128.559745319318
-          },
-          "iterations": 25,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB3": {
           "status": "success",
           "coefficients": {
-            "const": -2.0876238384179286,
-            "nt_pro_bnp_value": 0.02053394940787952,
-            "age": -0.051941217681430986
+            "const": -2.0876238384179233,
+            "nt_pro_bnp_value": 0.02053394940787953,
+            "age": -0.051941217681431104
           },
           "stderr": {
-            "const": 3.3592277839201636,
+            "const": 3.359227783919805,
             "nt_pro_bnp_value": 0.006643865120671501,
-            "age": 0.054378078723955864
+            "age": 0.054378078723950535
           },
           "iterations": 7,
           "converged": true
@@ -845,14 +691,14 @@
         "CONDITIONTEST": {
           "status": "success",
           "coefficients": {
-            "const": 8.730583871529722,
-            "nt_pro_bnp_value": -0.02752941629722049,
-            "age": -0.00751373244052795
+            "const": 8.730583871529717,
+            "nt_pro_bnp_value": -0.02752941629722048,
+            "age": -0.00751373244052793
           },
           "stderr": {
-            "const": 6.4597793150983405,
-            "nt_pro_bnp_value": 0.006567870605006161,
-            "age": 0.07000250714504096
+            "const": 6.4597793149238205,
+            "nt_pro_bnp_value": 0.0065678706050015245,
+            "age": 0.07000250714335356
           },
           "iterations": 9,
           "converged": true
@@ -860,74 +706,54 @@
         "CONDITION_AFIB": {
           "status": "success",
           "coefficients": {
-            "const": -14.0523865971868,
-            "nt_pro_bnp_value": -0.0011944659244638265,
-            "age": 0.13358498027601637
+            "const": -14.052386597186743,
+            "nt_pro_bnp_value": -0.001194465924463824,
+            "age": 0.13358498027601573
           },
           "stderr": {
-            "const": 7.2014865981153235,
-            "nt_pro_bnp_value": 0.0016819412422236731,
-            "age": 0.07714750670500332
+            "const": 7.2014865983568,
+            "nt_pro_bnp_value": 0.0016819412422242259,
+            "age": 0.07714750670758146
           },
           "iterations": 7,
           "converged": true
         },
         "CONDITION_HIS": {
-          "status": "success",
-          "coefficients": {
-            "const": 492.7261673143185,
-            "nt_pro_bnp_value": 0.45186516787551023,
-            "age": -8.361868385376933
-          },
-          "stderr": {
-            "const": 687495.3545071161,
-            "nt_pro_bnp_value": 416.48155199450906,
-            "age": 9674.50342620267
-          },
-          "iterations": 27,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB2": {
           "status": "success",
           "coefficients": {
-            "const": -13.772466052605042,
-            "nt_pro_bnp_value": -0.0010348029124123746,
-            "age": 0.13277017024450238
+            "const": -13.772466052605187,
+            "nt_pro_bnp_value": -0.0010348029124123772,
+            "age": 0.13277017024450394
           },
           "stderr": {
-            "const": 6.951029300884698,
-            "nt_pro_bnp_value": 0.0014918234775595442,
-            "age": 0.07451697173222792
+            "const": 6.951029300826962,
+            "nt_pro_bnp_value": 0.001491823477559465,
+            "age": 0.07451697173161023
           },
           "iterations": 7,
           "converged": true
         },
         "CONDITION_HIS2": {
-          "status": "success",
-          "coefficients": {
-            "const": -42.02067597284818,
-            "nt_pro_bnp_value": 0.2489691481971419,
-            "age": -0.8945098754741264
-          },
-          "stderr": {
-            "const": 325946.4823449037,
-            "nt_pro_bnp_value": 262.3461547508591,
-            "age": 3703.3528756618425
-          },
-          "iterations": 26,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB3": {
           "status": "success",
           "coefficients": {
-            "const": -17.015872364755886,
-            "nt_pro_bnp_value": 0.02972701622097782,
-            "age": 0.0808688071438377
+            "const": -17.01587236475592,
+            "nt_pro_bnp_value": 0.029727016220977866,
+            "age": 0.08086880714383797
           },
           "stderr": {
-            "const": 8.719565516017767,
-            "nt_pro_bnp_value": 0.009954690802498022,
-            "age": 0.0841492091720688
+            "const": 8.719565515849316,
+            "nt_pro_bnp_value": 0.009954690802454624,
+            "age": 0.08414920917065678
           },
           "iterations": 8,
           "converged": true
@@ -941,14 +767,14 @@
         "CONDITIONTEST": {
           "status": "success",
           "coefficients": {
-            "const": 3.7259199463483337,
-            "nt_pro_bnp_value": -0.013158172563705446,
-            "age": -0.05579410763231874
+            "const": 3.7259199463483306,
+            "nt_pro_bnp_value": -0.013158172563705441,
+            "age": -0.055794107632318686
           },
           "stderr": {
-            "const": 1.2937753588372332,
-            "nt_pro_bnp_value": 0.003776524315708701,
-            "age": 0.03355376967731931
+            "const": 1.2937753588381953,
+            "nt_pro_bnp_value": 0.003776524315709178,
+            "age": 0.03355376967734043
           },
           "iterations": 8,
           "converged": true
@@ -956,74 +782,54 @@
         "CONDITION_AFIB": {
           "status": "success",
           "coefficients": {
-            "const": -0.8260471169731837,
-            "nt_pro_bnp_value": -0.0013248241441149063,
-            "age": -0.020493333410108755
+            "const": -0.8260471169731807,
+            "nt_pro_bnp_value": -0.0013248241441149067,
+            "age": -0.02049333341010884
           },
           "stderr": {
-            "const": 1.2755038256210527,
-            "nt_pro_bnp_value": 0.0016652486582989594,
-            "age": 0.037516469679235276
+            "const": 1.2755038256205602,
+            "nt_pro_bnp_value": 0.0016652486582989588,
+            "age": 0.037516469679221905
           },
           "iterations": 6,
           "converged": true
         },
         "CONDITION_HIS": {
-          "status": "success",
-          "coefficients": {
-            "const": -667.7529926452324,
-            "nt_pro_bnp_value": 1.0589169019978377,
-            "age": 7.537338928082736
-          },
-          "stderr": {
-            "const": 649247.3531004495,
-            "nt_pro_bnp_value": 999.9784257351464,
-            "age": 8140.927438550699
-          },
-          "iterations": 28,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB2": {
           "status": "success",
           "coefficients": {
-            "const": -1.238254376334835,
-            "nt_pro_bnp_value": -0.0014448360102486024,
-            "age": 0.0036207187051997534
+            "const": -1.2382543763348361,
+            "nt_pro_bnp_value": -0.001444836010248603,
+            "age": 0.0036207187051997885
           },
           "stderr": {
-            "const": 1.2650120571942651,
-            "nt_pro_bnp_value": 0.0015424531560222997,
-            "age": 0.037937232293529334
+            "const": 1.2650120571951173,
+            "nt_pro_bnp_value": 0.0015424531560223052,
+            "age": 0.037937232293553065
           },
           "iterations": 6,
           "converged": true
         },
         "CONDITION_HIS2": {
-          "status": "success",
-          "coefficients": {
-            "const": -195.95016121756618,
-            "nt_pro_bnp_value": 0.6678534873874051,
-            "age": -0.5446435140184801
-          },
-          "stderr": {
-            "const": 250842.75027914072,
-            "nt_pro_bnp_value": 642.656654890666,
-            "age": 4027.2920895602915
-          },
-          "iterations": 27,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB3": {
           "status": "success",
           "coefficients": {
-            "const": -3.174730597482427,
-            "nt_pro_bnp_value": 0.013614067685379554,
-            "age": 0.00890756007911968
+            "const": -3.174730597482429,
+            "nt_pro_bnp_value": 0.013614067685379557,
+            "age": 0.008907560079119716
           },
           "stderr": {
-            "const": 1.5948503139638917,
-            "nt_pro_bnp_value": 0.005127112790894854,
-            "age": 0.04148399419461941
+            "const": 1.5948503139643218,
+            "nt_pro_bnp_value": 0.005127112790895169,
+            "age": 0.04148399419462822
           },
           "iterations": 6,
           "converged": true
@@ -1037,14 +843,14 @@
         "CONDITIONTEST": {
           "status": "success",
           "coefficients": {
-            "const": -3.879374629450359,
-            "nt_pro_bnp_value": -0.018616902396131122,
-            "age": 0.11349321003837351
+            "const": -3.879374629450336,
+            "nt_pro_bnp_value": -0.018616902396131094,
+            "age": 0.11349321003837308
           },
           "stderr": {
-            "const": 2.485394478845604,
-            "nt_pro_bnp_value": 0.005246881438284316,
-            "age": 0.04708961673084159
+            "const": 2.485394478845787,
+            "nt_pro_bnp_value": 0.00524688143828438,
+            "age": 0.04708961673084489
           },
           "iterations": 8,
           "converged": true
@@ -1052,74 +858,54 @@
         "CONDITION_AFIB": {
           "status": "success",
           "coefficients": {
-            "const": -3.308484779162957,
-            "nt_pro_bnp_value": -0.001219332908130721,
-            "age": 0.0350717617570125
+            "const": -3.308484779162953,
+            "nt_pro_bnp_value": -0.0012193329081307209,
+            "age": 0.03507176175701244
           },
           "stderr": {
-            "const": 2.1929531261069153,
-            "nt_pro_bnp_value": 0.0015797437538462983,
-            "age": 0.03415241579890252
+            "const": 2.192953126107348,
+            "nt_pro_bnp_value": 0.0015797437538463,
+            "age": 0.03415241579890861
           },
           "iterations": 6,
           "converged": true
         },
         "CONDITION_HIS": {
-          "status": "success",
-          "coefficients": {
-            "const": -48.597650937138184,
-            "nt_pro_bnp_value": 0.393846768145292,
-            "age": -2.551184060546549
-          },
-          "stderr": {
-            "const": 205910.76730676484,
-            "nt_pro_bnp_value": 451.1778988446546,
-            "age": 4263.032990308043
-          },
-          "iterations": 27,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB2": {
           "status": "success",
           "coefficients": {
-            "const": -2.088800819966249,
-            "nt_pro_bnp_value": -0.0010986691114400005,
-            "age": 0.023615223739463422
+            "const": -2.088800819966234,
+            "nt_pro_bnp_value": -0.0010986691114400003,
+            "age": 0.023615223739463197
           },
           "stderr": {
-            "const": 2.420402649740897,
-            "nt_pro_bnp_value": 0.0013882630404409607,
-            "age": 0.03719535123530465
+            "const": 2.420402649743973,
+            "nt_pro_bnp_value": 0.0013882630404409898,
+            "age": 0.0371953512353517
           },
           "iterations": 5,
           "converged": true
         },
         "CONDITION_HIS2": {
-          "status": "success",
-          "coefficients": {
-            "const": -54.69771991197225,
-            "nt_pro_bnp_value": 0.19603248437930051,
-            "age": -0.6259615512226282
-          },
-          "stderr": {
-            "const": 140322.57568502123,
-            "nt_pro_bnp_value": 177.43451511312267,
-            "age": 2090.7157766161513
-          },
-          "iterations": 25,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB3": {
           "status": "success",
           "coefficients": {
-            "const": 0.19941998057723417,
-            "nt_pro_bnp_value": 0.01521951508073419,
-            "age": -0.059661976714148336
+            "const": 0.19941998057722257,
+            "nt_pro_bnp_value": 0.01521951508073418,
+            "age": -0.05966197671414812
           },
           "stderr": {
-            "const": 3.049126328707258,
-            "nt_pro_bnp_value": 0.005271746897918699,
-            "age": 0.05309172659162548
+            "const": 3.0491263287069477,
+            "nt_pro_bnp_value": 0.005271746897918562,
+            "age": 0.05309172659161968
           },
           "iterations": 6,
           "converged": true
@@ -1133,14 +919,14 @@
         "CONDITIONTEST": {
           "status": "success",
           "coefficients": {
-            "const": -17.289743678360153,
-            "nt_pro_bnp_value": -0.012338287434980465,
-            "age": 0.2342671914363939
+            "const": -17.2897436783602,
+            "nt_pro_bnp_value": -0.012338287434980484,
+            "age": 0.2342671914363945
           },
           "stderr": {
-            "const": 6.784341133759327,
-            "nt_pro_bnp_value": 0.003754924437807741,
-            "age": 0.08142833962508166
+            "const": 6.784341133641409,
+            "nt_pro_bnp_value": 0.003754924437794105,
+            "age": 0.08142833962368336
           },
           "iterations": 7,
           "converged": true
@@ -1148,74 +934,54 @@
         "CONDITION_AFIB": {
           "status": "success",
           "coefficients": {
-            "const": -5.149474709898071,
-            "nt_pro_bnp_value": -0.0015870674323020788,
-            "age": 0.03511838639468773
+            "const": -5.149474709898056,
+            "nt_pro_bnp_value": -0.0015870674323020775,
+            "age": 0.03511838639468756
           },
           "stderr": {
-            "const": 8.721056721833037,
-            "nt_pro_bnp_value": 0.0029033415230541614,
-            "age": 0.09742524086361135
+            "const": 8.721056721990156,
+            "nt_pro_bnp_value": 0.002903341523055219,
+            "age": 0.09742524086538065
           },
           "iterations": 7,
           "converged": true
         },
         "CONDITION_HIS": {
-          "status": "success",
-          "coefficients": {
-            "const": 1220.7914365076506,
-            "nt_pro_bnp_value": 1.4901081389841089,
-            "age": -22.83288340456212
-          },
-          "stderr": {
-            "const": 1358798.0362641313,
-            "nt_pro_bnp_value": 1428.5208580018914,
-            "age": 23378.0846485868
-          },
-          "iterations": 28,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB2": {
           "status": "success",
           "coefficients": {
-            "const": -0.5214639085609152,
-            "nt_pro_bnp_value": -0.0014295511794028932,
-            "age": -0.011420770034118188
+            "const": -0.5214639085608768,
+            "nt_pro_bnp_value": -0.0014295511794028904,
+            "age": -0.011420770034118621
           },
           "stderr": {
-            "const": 9.06769961740523,
-            "nt_pro_bnp_value": 0.002499721643568539,
-            "age": 0.10088848725996705
+            "const": 9.067699617397867,
+            "nt_pro_bnp_value": 0.002499721643568485,
+            "age": 0.10088848725988575
           },
           "iterations": 6,
           "converged": true
         },
         "CONDITION_HIS2": {
-          "status": "success",
-          "coefficients": {
-            "const": 253.0644895480611,
-            "nt_pro_bnp_value": 0.40078393917443933,
-            "age": -5.136588614201917
-          },
-          "stderr": {
-            "const": 510062.7069755279,
-            "nt_pro_bnp_value": 439.1564142696829,
-            "age": 7263.4232272210065
-          },
-          "iterations": 26,
-          "converged": true
+          "status": "failed",
+          "error": "Numerical instability: NaNs or Infs in aggregated matrices",
+          "iterations": 50
         },
         "CONDITION_AFIB3": {
           "status": "success",
           "coefficients": {
-            "const": 11.183629125322991,
-            "nt_pro_bnp_value": 0.01055205963081275,
-            "age": -0.1771288612413674
+            "const": 11.183629125322984,
+            "nt_pro_bnp_value": 0.010552059630812734,
+            "age": -0.17712886124136729
           },
           "stderr": {
-            "const": 11.764183162898213,
-            "nt_pro_bnp_value": 0.006487555602076511,
-            "age": 0.14450676873792892
+            "const": 11.764183163289914,
+            "nt_pro_bnp_value": 0.006487555602156584,
+            "age": 0.14450676874265792
           },
           "iterations": 7,
           "converged": true
