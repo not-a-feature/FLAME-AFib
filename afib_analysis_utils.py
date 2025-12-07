@@ -36,7 +36,7 @@ class AFibAnalyzerMixin:
         diagnosis_pivot = self.diagnoses_df.pivot_table(
             index=["subject", "encounter.id"],
             columns="code",
-            aggfunc="mean",
+            aggfunc="size",
             fill_value=0,
         ).reset_index()
 
@@ -256,7 +256,7 @@ class AFibAnalyzerMixin:
         df_model["gender"] = df_model["gender_numeric"]
         df_model = df_model[[outcome] + predictors].dropna()
 
-        if len(df_model) < 10 or df_model[outcome].nunique() < 2:
+        if len(df_model) < 10:
             return None
 
         y = df_model[outcome].to_numpy()
@@ -402,20 +402,20 @@ class AFibAggregatorMixin:
             / total_n
         )
 
-        # Pooled variance formula: Var = sum(n_i * (var_i + (mean_i - global_mean)^2)) / N
-        pooled_variance = (
-            sum(
-                r["summary_stats"]["n_total"]
-                * (
-                    r["summary_stats"][std_key] ** 2
-                    + (r["summary_stats"][mean_key] - global_mean) ** 2
-                )
-                for r in results
-            )
-            / total_n
+        # Pooled variance formula: Var = sum(n_i * (var_i + (mean_i - global_mean)^2)) / N-1
+
+        # Use (n-1) to recover SSE from Sample Variance
+        pooled_sse = sum(
+            (r["summary_stats"]["n_total"] - 1) * (r["summary_stats"][std_key] ** 2)
+            + r["summary_stats"]["n_total"] * (r["summary_stats"][mean_key] - global_mean) ** 2
+            for r in results
         )
 
-        return float(np.sqrt(pooled_variance))
+        # Divide by (Total N - 1) for Unbiased Pooled Sample Standard Deviation
+        if total_n <= 1:
+            return 0.0
+
+        return float(np.sqrt(pooled_sse / (total_n - 1)))
 
     def _aggregate_gender_distribution(self, results: List[Dict[str, Any]]) -> Dict[str, int]:
         """Aggregate gender distribution across nodes."""
