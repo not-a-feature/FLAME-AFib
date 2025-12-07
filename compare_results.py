@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Tuple
 import numpy as np
 
 __author__ = "Jules Kreuer, jules.kreuer@uni-tuebingen.de"
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 
 # Tolerance for floating point comparison
 RELATIVE_TOLERANCE = 1e-4  # 0.01%

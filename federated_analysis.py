@@ -38,7 +38,7 @@ from afib_analysis_utils import (
 warnings.filterwarnings("ignore")
 
 __author__ = "Jules Kreuer, jules.kreuer@uni-tuebingen.de"
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 
 # S3 object keys to analyze (must be present in each node's bucket)
 # Set to None to analyze all CSV files

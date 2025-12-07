@@ -28,7 +28,7 @@ from afib_analysis_utils import AFibAnalyzerMixin, get_model_definitions
 warnings.filterwarnings("ignore")
 
 __author__ = "Jules Kreuer, jules.kreuer@uni-tuebingen.de"
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 
 COHORT_KEY = "cohort.csv"
 DIAGNOSES_KEY = "diagnoses.csv"

@@ -14,7 +14,7 @@ import numpy as np
 import statsmodels.api as sm
 
 __author__ = "Jules Kreuer, jules.kreuer@uni-tuebingen.de"
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 
 # Analysis parameters
 MAX_ITERATIONS = 50
@@ -23,6 +23,9 @@ CONVERGENCE_THRESHOLD = 1e-8
 
 class AFibAnalyzerMixin:
     """Mixin providing shared analysis methods for AFib analyzers."""
+
+    cohort_df: pd.DataFrame | None
+    diagnoses_df: pd.DataFrame | None
 
     def _prepare_analysis_data(self):
         """Prepare analysis dataframe with relevant columns and diagnosis flags."""
@@ -33,7 +36,7 @@ class AFibAnalyzerMixin:
         diagnosis_pivot = self.diagnoses_df.pivot_table(
             index=["subject", "encounter.id"],
             columns="code",
-            aggfunc="size",
+            aggfunc="mean",
             fill_value=0,
         ).reset_index()
 
@@ -211,6 +214,7 @@ class AFibAnalyzerMixin:
             cohort_df = self.analysis_df
 
         # Recode gender once
+        assert cohort_df is not None
         gender_map = {"male": 0, "female": 1}
         cohort_df["gender_numeric"] = cohort_df["gender"].map(gender_map).fillna(2).astype(int)
 
