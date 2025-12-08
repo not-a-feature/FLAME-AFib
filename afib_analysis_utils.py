@@ -14,15 +14,18 @@ import numpy as np
 import statsmodels.api as sm
 
 __author__ = "Jules Kreuer, jules.kreuer@uni-tuebingen.de"
-__version__ = "0.0.0"
+__version__ = "0.1.0"
 
 # Analysis parameters
-MAX_ITERATIONS = 50
+MAX_ITERATIONS = 30
 CONVERGENCE_THRESHOLD = 1e-8
 
 
 class AFibAnalyzerMixin:
     """Mixin providing shared analysis methods for AFib analyzers."""
+
+    cohort_df: pd.DataFrame | None
+    diagnoses_df: pd.DataFrame | None
 
     def _prepare_analysis_data(self):
         """Prepare analysis dataframe with relevant columns and diagnosis flags."""
@@ -132,14 +135,17 @@ class AFibAnalyzerMixin:
 
         self.analysis_df.dropna(subset=["NTproBNP.unit"], inplace=True)
 
+        # Scale NT-proBNP to avoid numerical instability in GLM (exp overflow)
+        # Convert directly to ng/mL (divide pg/mL factors by 1000)
         unit_factors = {
-            "pg/ml": 1.0,  # default
-            "ng/l": 1.0,
-            "pg/dl": 0.01,
-            "pg/100ml": 0.01,
-            "pg%": 0.01,
-            "pg/l": 0.001,
-            "pmol/l": 8.457,  # See: https://journals.sagepub.com/doi/full/10.1258/acb.2007.007069 "NT-proBNP concentrations are expressed in picomoles/litre (for conversion to picograms/millilitre they are multiplied by 8.457)."
+            "ng/ml": 1.0,  # default
+            "pg/ml": 0.001,
+            "ng/l": 0.001,
+            "pg/dl": 0.00001,
+            "pg/100ml": 0.00001,
+            "pg%": 0.00001,
+            "pg/l": 0.000001,
+            "pmol/l": 0.008457,  # See: https://journals.sagepub.com/doi/full/10.1258/acb.2007.007069 "NT-proBNP concentrations are expressed in picomoles/litre (for conversion to picograms/millilitre they are multiplied by 8.457)."
         }
 
         unit_lower = self.analysis_df["NTproBNP.unit"].str.lower()
@@ -149,8 +155,8 @@ class AFibAnalyzerMixin:
         conversion_factors = self.analysis_df["NTproBNP.unit"].str.lower().map(unit_factors)
         self.analysis_df["nt_pro_bnp_value"] *= conversion_factors
 
-        self.analysis_df["NTproBNP.unit"] = "pg/mL"
-        self.analysis_df["NTproBNP.unitLabel"] = "picogram per milliliter"
+        self.analysis_df["NTproBNP.unit"] = "ng/mL"
+        self.analysis_df["NTproBNP.unitLabel"] = "nanogram per milliliter"
 
     def _filter_data(self):
         """Filter out missing values."""
@@ -211,6 +217,7 @@ class AFibAnalyzerMixin:
             cohort_df = self.analysis_df
 
         # Recode gender once
+        assert cohort_df is not None
         gender_map = {"male": 0, "female": 1}
         cohort_df["gender_numeric"] = cohort_df["gender"].map(gender_map).fillna(2).astype(int)
 
@@ -252,7 +259,7 @@ class AFibAnalyzerMixin:
         df_model["gender"] = df_model["gender_numeric"]
         df_model = df_model[[outcome] + predictors].dropna()
 
-        if len(df_model) < 10 or df_model[outcome].nunique() < 2:
+        if len(df_model) < 10:
             return None
 
         y = df_model[outcome].to_numpy()
@@ -277,6 +284,9 @@ class AFibAnalyzerMixin:
         # Calculate deviance
         mu = model.predict(beta_array)
         deviance = model.family.deviance(y, mu)
+
+        if not np.all(np.isfinite(score_vector)) or not np.all(np.isfinite(info_matrix)):
+            return None
 
         return {
             "score_vector": score_vector.tolist(),
@@ -398,20 +408,20 @@ class AFibAggregatorMixin:
             / total_n
         )
 
-        # Pooled variance formula: Var = sum(n_i * (var_i + (mean_i - global_mean)^2)) / N
-        pooled_variance = (
-            sum(
-                r["summary_stats"]["n_total"]
-                * (
-                    r["summary_stats"][std_key] ** 2
-                    + (r["summary_stats"][mean_key] - global_mean) ** 2
-                )
-                for r in results
-            )
-            / total_n
+        # Pooled variance formula: Var = sum(n_i * (var_i + (mean_i - global_mean)^2)) / N-1
+
+        # Use (n-1) to recover SSE from Sample Variance
+        pooled_sse = sum(
+            (r["summary_stats"]["n_total"] - 1) * (r["summary_stats"][std_key] ** 2)
+            + r["summary_stats"]["n_total"] * (r["summary_stats"][mean_key] - global_mean) ** 2
+            for r in results
         )
 
-        return float(np.sqrt(pooled_variance))
+        # Divide by (Total N - 1) for Unbiased Pooled Sample Standard Deviation
+        if total_n <= 1:
+            return 0.0
+
+        return float(np.sqrt(pooled_sse / (total_n - 1)))
 
     def _aggregate_gender_distribution(self, results: List[Dict[str, Any]]) -> Dict[str, int]:
         """Aggregate gender distribution across nodes."""
