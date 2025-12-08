@@ -135,14 +135,17 @@ class AFibAnalyzerMixin:
 
         self.analysis_df.dropna(subset=["NTproBNP.unit"], inplace=True)
 
+        # Scale NT-proBNP to avoid numerical instability in GLM (exp overflow)
+        # Convert directly to ng/mL (divide pg/mL factors by 1000)
         unit_factors = {
-            "pg/ml": 1.0,  # default
-            "ng/l": 1.0,
-            "pg/dl": 0.01,
-            "pg/100ml": 0.01,
-            "pg%": 0.01,
-            "pg/l": 0.001,
-            "pmol/l": 8.457,  # See: https://journals.sagepub.com/doi/full/10.1258/acb.2007.007069 "NT-proBNP concentrations are expressed in picomoles/litre (for conversion to picograms/millilitre they are multiplied by 8.457)."
+            "ng/ml": 1.0,  # default
+            "pg/ml": 0.001,
+            "ng/l": 0.001,
+            "pg/dl": 0.00001,
+            "pg/100ml": 0.00001,
+            "pg%": 0.00001,
+            "pg/l": 0.000001,
+            "pmol/l": 0.008457,  # See: https://journals.sagepub.com/doi/full/10.1258/acb.2007.007069 "NT-proBNP concentrations are expressed in picomoles/litre (for conversion to picograms/millilitre they are multiplied by 8.457)."
         }
 
         unit_lower = self.analysis_df["NTproBNP.unit"].str.lower()
@@ -151,10 +154,6 @@ class AFibAnalyzerMixin:
 
         conversion_factors = self.analysis_df["NTproBNP.unit"].str.lower().map(unit_factors)
         self.analysis_df["nt_pro_bnp_value"] *= conversion_factors
-
-        # Scale NT-proBNP to avoid numerical instability in GLM (exp overflow)
-        # Convert from pg/mL to ng/mL (divide by 1000)
-        self.analysis_df["nt_pro_bnp_value"] /= 1000.0
 
         self.analysis_df["NTproBNP.unit"] = "ng/mL"
         self.analysis_df["NTproBNP.unitLabel"] = "nanogram per milliliter"
