@@ -17,7 +17,7 @@ __author__ = "Jules Kreuer, jules.kreuer@uni-tuebingen.de"
 __version__ = "0.1.0"
 
 # Analysis parameters
-MAX_ITERATIONS = 50
+MAX_ITERATIONS = 30
 CONVERGENCE_THRESHOLD = 1e-8
 
 
@@ -152,8 +152,12 @@ class AFibAnalyzerMixin:
         conversion_factors = self.analysis_df["NTproBNP.unit"].str.lower().map(unit_factors)
         self.analysis_df["nt_pro_bnp_value"] *= conversion_factors
 
-        self.analysis_df["NTproBNP.unit"] = "pg/mL"
-        self.analysis_df["NTproBNP.unitLabel"] = "picogram per milliliter"
+        # Scale NT-proBNP to avoid numerical instability in GLM (exp overflow)
+        # Convert from pg/mL to ng/mL (divide by 1000)
+        self.analysis_df["nt_pro_bnp_value"] /= 1000.0
+
+        self.analysis_df["NTproBNP.unit"] = "ng/mL"
+        self.analysis_df["NTproBNP.unitLabel"] = "nanogram per milliliter"
 
     def _filter_data(self):
         """Filter out missing values."""
@@ -281,6 +285,9 @@ class AFibAnalyzerMixin:
         # Calculate deviance
         mu = model.predict(beta_array)
         deviance = model.family.deviance(y, mu)
+
+        if not np.all(np.isfinite(score_vector)) or not np.all(np.isfinite(info_matrix)):
+            return None
 
         return {
             "score_vector": score_vector.tolist(),
