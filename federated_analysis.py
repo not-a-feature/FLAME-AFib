@@ -18,6 +18,7 @@ The analysis:
 
 from __future__ import annotations
 
+import json
 import traceback
 from typing import Any, Dict, List
 import io
@@ -33,6 +34,8 @@ from afib_analysis_utils import (
     MAX_ITERATIONS,
     run_analysis_iteration,
     run_aggregation_iteration,
+    DPConfig,
+    apply_dp_to_results
 )
 
 warnings.filterwarnings("ignore")
@@ -148,6 +151,24 @@ class AFibAggregator(StarAggregator, AFibAggregatorMixin):
             for state in models.values()
         )
         return all_converged
+
+    def get_result(self) -> str:
+        """Return the final (optionally DP-noised) result JSON for FLAME.
+
+        StarModel(output_type="str") will expose exactly this string as the
+        job output. We keep all IRLS and aggregation logic non-DP and only
+        perturb the final JSON here.
+        """
+        # 1) Raw, non-DP result from the shared mixin
+        raw_json = AFibAggregatorMixin.get_result(self)
+        raw_result = json.loads(raw_json)
+
+        # 2) Apply output-level DP (controlled by DPConfig.enabled / epsilon)
+        dp_config = DPConfig.get_config()
+        dp_result = apply_dp_to_results(raw_result, dp_config)
+
+        # 3) Return as pretty JSON string
+        return json.dumps(dp_result, indent=2)
 
 
 def main():

@@ -20,6 +20,7 @@ The analysis process:
 
 from __future__ import annotations
 
+import json
 import traceback
 from typing import Any, Dict, List
 import os
@@ -33,6 +34,8 @@ from afib_analysis_utils import (
     MAX_ITERATIONS,
     run_analysis_iteration,
     run_aggregation_iteration,
+    DPConfig,
+    apply_dp_to_results
 )
 
 warnings.filterwarnings("ignore")
@@ -114,6 +117,23 @@ class AFibAggregator(AFibAggregatorMixin):
             for models in self.model_states.values()
             for state in models.values()
         )
+
+    def get_result(self) -> str:
+        """Return the final (optionally DP-noised) result JSON for local analysis.
+
+        This mirrors the federated AFibAggregator: we keep all IRLS logic
+        non-DP and only perturb the final JSON here.
+        """
+        # 1) Raw, non-DP result from the shared mixin
+        raw_json = AFibAggregatorMixin.get_result(self)
+        raw_result = json.loads(raw_json)
+
+        # 2) Apply output-level DP (controlled by DPConfig.enabled / epsilon)
+        dp_config = DPConfig.get_config()
+        dp_result = apply_dp_to_results(raw_result, dp_config)
+
+        # 3) Return as pretty JSON string
+        return json.dumps(dp_result, indent=2)
 
 
 def main():

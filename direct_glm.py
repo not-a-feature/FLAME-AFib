@@ -23,7 +23,7 @@ import numpy as np
 import statsmodels.api as sm
 import warnings
 
-from afib_analysis_utils import AFibAnalyzerMixin, get_model_definitions
+from afib_analysis_utils import AFibAnalyzerMixin, get_model_definitions, DPConfig, apply_dp_to_results
 
 warnings.filterwarnings("ignore")
 
@@ -136,6 +136,9 @@ class DirectGLMAnalyzer(AFibAnalyzerMixin):
         # Get all demographic cohorts
         demographic_cohorts = self._get_demographic_cohorts()
 
+        dp_config = DPConfig.get_config()
+        min_cohort_size = dp_config.n_min
+
         all_results = {}
         # Use first cohort to get model count (all cohorts have same number of models)
         first_cohort = next(iter(demographic_cohorts.keys()))
@@ -148,6 +151,19 @@ class DirectGLMAnalyzer(AFibAnalyzerMixin):
         for cohort_name, cohort_df in demographic_cohorts.items():
             cohort_label = cohort_name.split("_", 1)[1] if "_" in cohort_name else cohort_name
             print(f"Cohort: {cohort_label} (n={len(cohort_df)})")
+
+            if len(cohort_df) < min_cohort_size:
+                print(
+                    f"  Skipping cohort (n={len(cohort_df)}) < min_cohort_size={min_cohort_size}: "
+                    "not reported due to small n"
+                )
+                all_results[cohort_name] = {
+                    "status": "not_reported_small_cohort",
+                    "n_records": len(cohort_df),
+                    "analyses": {},
+                }
+                print()
+                continue
 
             if cohort_df.empty:
                 all_results[cohort_name] = {
@@ -246,6 +262,9 @@ def main():
         },
         "cohort_results": cohort_results,
     }
+
+    dp_config = DPConfig.get_config()
+    final_results = apply_dp_to_results(final_results, dp_config)
 
     result_json = json.dumps(final_results, indent=2)
     # print(result_json)

@@ -20,6 +20,31 @@ Simulates the federated setting locally for development and testing. Mimics the 
 ### 3. Direct Analysis (`direct_glm.py`)
 Performs standard GLM fitting on combined data as a reference implementation. This represents the gold standard result when all data is pooled centrally.
 
+## Privacy
+
+This branch implements an output-level differential privacy (DP) variant of the
+AFib analysis. The core preprocessing and statistical models are unchanged;
+only the **final aggregated results** are perturbed.
+
+We assume a trusted execution environment for all node-local computation and
+federated message passing. Differential privacy is applied exclusively to the
+final JSON outputs produced by the direct (pooled), local-federated, and FLAME
+analyses.
+
+To obtain finite, data-independent sensitivities, inputs are bounded via
+deterministic clipping and very small cohorts are suppressed rather than
+reported. On top of these bounded aggregates, we apply independent Laplace
+mechanisms (via OpenDP) to each scalar summary and model statistic, using
+per-statistic global sensitivities and a common privacy parameter ε. This
+provides ε-DP protection for each individual reported statistic; the joint
+release of all statistics should be interpreted under standard DP composition
+for this one-shot batch report.
+
+Logistic regression outputs (coefficients and standard errors) are additionally
+perturbed to reduce disclosure risk, but the underlying fitting procedure is
+not itself differentially private. All DP parameters (clipping bounds,
+sensitivities, and ε configuration) are defined explicitly in the code.
+
 ## Validation
 
 `compare_results.py` compares outputs from local and direct analyses to validate the federated implementation's correctness.

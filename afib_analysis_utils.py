@@ -7,11 +7,18 @@ and local AFib (Vorhofflimmern/Atrial Fibrillation) analysis implementations.
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass
 from typing import Any, Dict, List
 
 import pandas as pd
 import numpy as np
 import statsmodels.api as sm
+import copy
+from opendp.mod import enable_features
+import opendp.prelude as dp
+
+dp.enable_features("contrib")
+enable_features("floating-point")
 
 __author__ = "Jules Kreuer, jules.kreuer@uni-tuebingen.de"
 __version__ = "0.1.0"
@@ -110,6 +117,11 @@ class AFibAnalyzerMixin:
             self.analysis_df.loc[mask_greater, "nt_pro_bnp_value"] += 1
             self.analysis_df.loc[mask_less, "nt_pro_bnp_value"] -= 1
 
+        self.analysis_df["age"] = self.analysis_df["age"].clip(lower=DPConfig.age_min, upper=DPConfig.age_max)
+        self.analysis_df["nt_pro_bnp_value"] = self.analysis_df["nt_pro_bnp_value"].clip(
+            lower=DPConfig.nt_min, upper=DPConfig.nt_max
+        )
+
         # Apply unit conversion
         self._convert_nt_pro_bnp_units()
 
@@ -157,6 +169,10 @@ class AFibAnalyzerMixin:
 
         self.analysis_df["NTproBNP.unit"] = "ng/mL"
         self.analysis_df["NTproBNP.unitLabel"] = "nanogram per milliliter"
+
+        self.analysis_df["nt_pro_bnp_value"] = self.analysis_df["nt_pro_bnp_value"].clip(
+            lower=DPConfig.nt_min, upper=DPConfig.nt_max
+        )
 
     def _filter_data(self):
         """Filter out missing values."""
@@ -545,6 +561,7 @@ class AFibAggregatorMixin:
         cohort_results = {}
         total_analyses = 0
         successful_analyses = 0
+        min_cohort_size = DPConfig.get_config().n_min
 
         for cohort_name, models in self.model_states.items():
             analyses = {}
@@ -552,6 +569,15 @@ class AFibAggregatorMixin:
             n_records = 0
             if hasattr(self, "cohort_n_records") and cohort_name in self.cohort_n_records:
                 n_records = self.cohort_n_records[cohort_name]
+
+            if n_records < min_cohort_size:
+                cohort_results[cohort_name] = {
+                    "status": "not_reported_small_cohort",
+                    "n_records": n_records,
+                    "analyses": {},
+                }
+                # Skip all model-level analysis for this cohort
+                continue
 
             for model_name, state in models.items():
                 total_analyses += 1
@@ -853,3 +879,228 @@ def run_aggregation_iteration(
         "model_states": aggregator.model_states,
         "summary": aggregator.summary_stats,
     }
+
+@dataclass
+class DPConfig:
+    """Configuration for output-level differential privacy."""
+    enabled: bool = True
+
+    # Individual Epsilon for each result (counts, means, rates, coefficients, etc.)
+    # TODO: Decide which outputs actually need protection, as overall epsilon is very high currently
+    epsilon: float = 1
+
+    # We assume:
+    # - age is in [18, 100] years (adult cohort, no pediatrics or >100-year edge cases)
+    # - NTproBNP (after unit harmonization to pg/mL) is clipped to [0, 5000.0]
+    #   (very high but still clinically plausible; extreme outliers beyond that
+    #   are truncated, so they don't blow up sensitivity)
+    # - We only publish cohorts with n >= 50 (n_min = 50), which stabilizes
+    #   means/rates and gives us nicer DP sensitivities.
+
+    age_min: float = 18.0
+    age_max: float = 100.0
+    nt_min: float = 0.0
+    nt_max: float = 5000.0
+    n_min: int = 50
+
+    # ---------------- Sensitivities (fine-grained) ----------------
+
+    # Counts change by at most 1 when a single person is added/removed.
+    sensitivity_counts: float = 1.0
+
+    # For AGE mean:
+    sensitivity_age_mean: float = (age_max - age_min) / n_min
+
+    # For NTproBNP mean:
+    sensitivity_nt_mean: float = (nt_max - nt_min) / n_min
+
+    # Std dev sensitivities are a bit messy in theory; as a pragmatic
+    # first pass we use the same scale as the corresponding means.
+    sensitivity_age_std: float = (age_max - age_min) / n_min
+    sensitivity_nt_std: float = (nt_max - nt_min) / n_min
+
+    # For proportions like AF_rate:
+    sensitivity_rates: float = 1.0 / n_min
+
+    # Heuristic: assume each coefficient can move by at most ~0.5 for 1 person
+    # when predictors are reasonably scaled (e.g., age in decades, log-NTpro).
+    # This is *not* formally derived DP logistic regression, just a pragmatic
+    # starting point for experimentation.
+    sensitivity_beta: float = 0.5
+
+    # Same heuristic scale as coefficients: we perturb SEs with similar
+    # magnitude noise so that p-values / intervals still roughly track
+    # the noised coefficients without dominating them.
+    sensitivity_stderr: float = 0.5
+
+    @classmethod
+    def get_config(cls) -> "DPConfig":
+        """
+        Return an instance using the class-level defaults.
+        """
+        return cls(
+            enabled=cls.enabled,
+            epsilon=cls.epsilon,
+            age_min=cls.age_min,
+            age_max=cls.age_max,
+            nt_min=cls.nt_min,
+            nt_max=cls.nt_max,
+            n_min=cls.n_min,
+            sensitivity_counts=cls.sensitivity_counts,
+            sensitivity_age_mean=(cls.age_max - cls.age_min) / cls.n_min,
+            sensitivity_nt_mean=(cls.nt_max - cls.nt_min) / cls.n_min,
+            sensitivity_age_std=(cls.age_max - cls.age_min) / cls.n_min,
+            sensitivity_nt_std=(cls.nt_max - cls.nt_min) / cls.n_min,
+            sensitivity_rates=1.0 / cls.n_min,
+            sensitivity_beta=cls.sensitivity_beta,
+            sensitivity_stderr=cls.sensitivity_stderr,
+        )
+
+
+def laplace_mech(value: float, epsilon: float, sensitivity: float) -> float:
+    """Apply the Laplace mechanism to a scalar using OpenDP.
+
+    Assumes OpenDP is installed and available. If there is any misconfiguration
+    (e.g. wrong types, invalid epsilon), this should raise loudly.
+    """
+    if epsilon <= 0:
+        raise ValueError("Epsilon must be strictly positive.")
+    if sensitivity < 0:
+        raise ValueError("Sensitivity must be non-negative.")
+    if sensitivity == 0:
+        # No sensitivity -> no noise needed
+        return float(value)
+
+    # OpenDP convention: epsilon = sensitivity / scale
+    scale = sensitivity / epsilon
+
+    # Domain: a single float (no NaNs)
+    domain = dp.atom_domain(T=float, nan=False)
+    # Metric: absolute distance on floats
+    metric = dp.absolute_distance(T=float)
+
+    # Measurement: Laplace mechanism with given scale
+    meas = dp.m.make_laplace(domain, metric, scale=scale)
+
+    noised = meas(float(value))
+    return float(noised)
+
+
+def _dp_noise_scalar(value, epsilon: float, sensitivity: float):
+    """Helper to safely noise numeric scalars."""
+    if value is None:
+        return None
+    return laplace_mech(float(value), epsilon, sensitivity)
+
+
+def apply_dp_to_results(result: Dict[str, Any], config: DPConfig) -> Dict[str, Any]:
+    """Apply output-level DP to a full result dict.
+
+    This handles both:
+      - direct GLM outputs (direct_glm.py)
+      - federated/local outputs built from AFibAggregatorMixin
+
+    Expected schema:
+      {
+        "overall_status": "completed",
+        "summary": {
+          "dataset_statistics": { ... },
+          "total_cohorts": ...,
+          "total_analyses": ...,
+          "successful_analyses": ...
+        },
+        "cohort_results": {
+          cohort_name: {
+            "status": "completed",
+            "n_records": int,
+            "analyses": {
+              model_name: {
+                "status": "success" | "failed",
+                "coefficients": {name: value},
+                "stderr": {name: value},
+                "iterations": ...
+              }
+            }
+          }
+        }
+      }
+    """
+    if not config.enabled:
+        return result
+
+    res = copy.deepcopy(result)
+    eps = config.epsilon
+
+    # ---------- Dataset-level summary stats ----------
+    summary = res.get("summary", {})
+    ds = summary.get("dataset_statistics", {})
+
+    # Counts: n_total (federated) / total_records (direct), event totals, n_nodes
+    for key in [
+        "n_total",
+        "total_records",
+        "total_atrial_fibrillation",
+        "total_heart_failure",
+        "total_myocardial_infarction",
+        "total_stroke",
+        "n_nodes",
+    ]:
+        if key in ds:
+            ds[key] = _dp_noise_scalar(ds.get(key), eps, config.sensitivity_counts)
+
+    # Gender distribution: dict of counts per gender
+    gender_dist = ds.get("gender_distribution")
+    if isinstance(gender_dist, dict):
+        for g, count in gender_dist.items():
+            gender_dist[g] = _dp_noise_scalar(count, eps, config.sensitivity_counts)
+
+    # Means / stds: fine-grained
+    if "age_mean" in ds:
+        ds["age_mean"] = _dp_noise_scalar(
+            ds.get("age_mean"), eps, config.sensitivity_age_mean
+        )
+    if "age_std" in ds:
+        ds["age_std"] = _dp_noise_scalar(
+            ds.get("age_std"), eps, config.sensitivity_age_std
+        )
+
+    if "nt_pro_bnp_mean" in ds:
+        ds["nt_pro_bnp_mean"] = _dp_noise_scalar(
+            ds.get("nt_pro_bnp_mean"), eps, config.sensitivity_nt_mean
+        )
+    if "nt_pro_bnp_std" in ds:
+        ds["nt_pro_bnp_std"] = _dp_noise_scalar(
+            ds.get("nt_pro_bnp_std"), eps, config.sensitivity_nt_std
+        )
+
+    # ---------- Per-cohort numbers + coefficients ----------
+    cohort_results = res.get("cohort_results", {}) or {}
+    for cohort_name, cohort in cohort_results.items():
+        # cohort size
+        if "n_records" in cohort:
+            cohort["n_records"] = _dp_noise_scalar(
+                cohort.get("n_records"), eps, config.sensitivity_counts
+            )
+
+        analyses = cohort.get("analyses", {}) or {}
+        for model_name, model in analyses.items():
+            if model.get("status") != "success":
+                continue
+
+            # Coefficients
+            coeffs = model.get("coefficients")
+            if isinstance(coeffs, dict):
+                for pname, val in coeffs.items():
+                    coeffs[pname] = _dp_noise_scalar(
+                        val, eps, config.sensitivity_beta
+                    )
+
+            # Standard errors
+            stderr = model.get("stderr")
+            if isinstance(stderr, dict):
+                for pname, val in stderr.items():
+                    stderr[pname] = _dp_noise_scalar(
+                        val, eps, config.sensitivity_stderr
+                    )
+
+    return res
