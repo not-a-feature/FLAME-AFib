@@ -10,9 +10,10 @@ Runs on the PrivateAIM Platform (FLAME). This analysis shall not be executed on 
 
 **Use:**
 - Project: AFib-test
-- Nodes: 1, 2, and 6
+- Nodes: Two Nodes, One Aggregator
 - Upload: federated_analysis.py (entry point) and afib_analysis_utils.py
 - Docker Image: python/use-cases fedstats
+- Check/Conntect the Datastores
 
 ### 2. Local Analysis (`local_analysis.py`)
 Simulates the federated setting locally for development and testing. Mimics the federated workflow by processing data from multiple nodes sequentially on a single machine.
