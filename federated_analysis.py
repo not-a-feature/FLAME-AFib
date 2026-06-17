@@ -133,8 +133,10 @@ class AFibAggregator(StarAggregator, AFibAggregatorMixin):
         print(f"[Aggregator] aggregation_method called with {len(analysis_results)} results")
         return run_aggregation_iteration(self, analysis_results)
 
-    def has_converged(self, result, last_result, num_iterations):  # type: ignore[no-untyped-def]
+    def has_converged(self, result, last_result, num_iterations=None):  # type: ignore[no-untyped-def]
         """Check if all models across all cohorts have converged or max iterations reached."""
+        if num_iterations is None:
+            num_iterations = self.iteration
         if num_iterations >= MAX_ITERATIONS:
             return True
 

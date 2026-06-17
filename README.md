@@ -1,5 +1,7 @@
 # FLAME-AFib Analysis
 
+Maintainer: [Jules Kreuer](https://github.com/not-a-feature)
+
 This repository contains three implementations of atrial fibrillation (AFib) analysis using generalized linear models (GLM):
 
 ## Analysis Versions
