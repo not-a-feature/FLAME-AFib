@@ -21,6 +21,17 @@ MAX_ITERATIONS = 30
 CONVERGENCE_THRESHOLD = 1e-8
 
 
+def safe_float(v: Any) -> float:
+    """Safely convert to float, handling NaN and Infinity."""
+    try:
+        f = float(v)
+        if pd.isna(f) or not np.isfinite(f):
+            return 0.0
+        return f
+    except (TypeError, ValueError):
+        return 0.0
+
+
 class AFibAnalyzerMixin:
     """Mixin providing shared analysis methods for AFib analyzers."""
 
@@ -288,6 +299,9 @@ class AFibAnalyzerMixin:
         if not np.all(np.isfinite(score_vector)) or not np.all(np.isfinite(info_matrix)):
             return None
 
+        if not np.isfinite(deviance):
+            return None
+
         return {
             "score_vector": score_vector.tolist(),
             "info_matrix": info_matrix.tolist(),
@@ -302,8 +316,8 @@ class AFibAnalyzerMixin:
             raise RuntimeError("Analysis DataFrame not prepared")
         return {
             "n_total": len(self.analysis_df),
-            "nt_pro_bnp_mean": float(self.analysis_df["nt_pro_bnp_value"].mean()),
-            "age_mean": float(self.analysis_df["age"].mean()),
+            "nt_pro_bnp_mean": safe_float(self.analysis_df["nt_pro_bnp_value"].mean()),
+            "age_mean": safe_float(self.analysis_df["age"].mean()),
             "atrial_fibrillation_count": int(self.analysis_df["AtrialFibrillation"].sum()),
             "heart_failure_count": int(self.analysis_df["HeartFailure"].sum()),
         }
@@ -337,7 +351,7 @@ class AFibAggregatorMixin:
             for name, (outcome, predictors) in model_defs.items():
                 self.model_states[cohort_name][name] = {
                     "beta": {},  # Will store {predictor: value} dict
-                    "deviance": float("inf"),
+                    "deviance": 1e15,
                     "converged": False,
                     "iteration": 0,
                     "predictors": predictors,
@@ -418,10 +432,10 @@ class AFibAggregatorMixin:
         )
 
         # Divide by (Total N - 1) for Unbiased Pooled Sample Standard Deviation
-        if total_n <= 1:
+        if total_n <= 1 or not np.isfinite(pooled_sse) or pooled_sse < 0:
             return 0.0
 
-        return float(np.sqrt(pooled_sse / (total_n - 1)))
+        return safe_float(np.sqrt(pooled_sse / (total_n - 1)))
 
     def _aggregate_gender_distribution(self, results: List[Dict[str, Any]]) -> Dict[str, int]:
         """Aggregate gender distribution across nodes."""
@@ -486,7 +500,7 @@ class AFibAggregatorMixin:
 
         total_info_matrix = np.sum([np.array(it["info_matrix"]) for it in all_iterations], axis=0)
         total_score_vector = np.sum([np.array(it["score_vector"]) for it in all_iterations], axis=0)
-        total_deviance = np.sum([it["deviance"] for it in all_iterations])
+        total_deviance = safe_float(np.sum([it["deviance"] for it in all_iterations]))
 
         # Check for NaNs or Infs
         if not np.all(np.isfinite(total_info_matrix)) or not np.all(
@@ -526,14 +540,14 @@ class AFibAggregatorMixin:
         converged = delta_deviance < (CONVERGENCE_THRESHOLD * (abs(total_deviance) + 1.0))
 
         # Store as dict
-        state["beta"] = dict(zip(predictor_names, new_beta.tolist()))
+        state["beta"] = dict(zip(predictor_names, [safe_float(x) for x in new_beta]))
         state["deviance"] = total_deviance
         # Always calculate stderr for current state
         # Ensure non-negative diagonal elements before sqrt
         diag_elements = np.diag(inv_info_matrix)
         # Replace negative elements (numerical noise) with 0 or small value
         diag_elements = np.maximum(diag_elements, 0)
-        state["stderr"] = dict(zip(predictor_names, np.sqrt(diag_elements).tolist()))
+        state["stderr"] = dict(zip(predictor_names, [safe_float(x) for x in np.sqrt(diag_elements)]))
 
         if converged:
             state["converged"] = True
@@ -754,15 +768,15 @@ def run_analysis_iteration(
             df = analyzer.analysis_df
             overall_stats = {
                 "n_total": len(df),
-                "nt_pro_bnp_mean": float(df["nt_pro_bnp_value"].mean()),
-                "nt_pro_bnp_std": float(df["nt_pro_bnp_value"].std()),
-                "age_mean": float(df["age"].mean()),
-                "age_std": float(df["age"].std()),
+                "nt_pro_bnp_mean": safe_float(df["nt_pro_bnp_value"].mean()),
+                "nt_pro_bnp_std": safe_float(df["nt_pro_bnp_value"].std()),
+                "age_mean": safe_float(df["age"].mean()),
+                "age_std": safe_float(df["age"].std()),
                 "atrial_fibrillation_count": int(df["AtrialFibrillation"].sum()),
                 "heart_failure_count": int(df["HeartFailure"].sum()),
                 "myocardial_infarction_count": int(df["MyocardialInfarction"].sum()),
                 "stroke_count": int(df["Stroke"].sum()),
-                "gender_distribution": df["gender"].value_counts().to_dict(),
+                "gender_distribution": {str(k): int(v) for k, v in df["gender"].value_counts().items()},
             }
 
         return {
@@ -842,7 +856,7 @@ def run_aggregation_iteration(
         for state in models.values()
     )
 
-    if all_converged:
+    if all_converged or aggregator.iteration >= MAX_ITERATIONS:
         # Parse the JSON string result back to dict for consistency
         result_json = aggregator.get_result()
         return json.loads(result_json)

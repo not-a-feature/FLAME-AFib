@@ -210,7 +210,7 @@ def print_summary_comparison(local_data: Dict[str, Any], direct_data: Dict[str, 
             for coef_name in sorted(local_coef.keys()):
                 if coef_name in direct_coef:
                     diff = abs(local_coef[coef_name] - direct_coef[coef_name])
-                    match = "✓" if diff < 1e-4 else "✗"
+                    match = "[OK]" if diff < 1e-4 else "[FAIL]"
                     print(
                         f"      {match} {coef_name:20s}: Local={local_coef[coef_name]:12.6f}, Direct={direct_coef[coef_name]:12.6f}, Diff={diff:.2e}"
                     )
@@ -257,12 +257,12 @@ def main():
     match, errors = compare_values(local_data, direct_data)
 
     if match:
-        print("\n✓ SUCCESS: Results match within tolerance!")
+        print("\nSUCCESS: Results match within tolerance!")
         print(f"  Relative tolerance: {RELATIVE_TOLERANCE}")
         print(f"  Absolute tolerance: {ABSOLUTE_TOLERANCE}")
         sys.exit(0)
     else:
-        print(f"\n✗ FAILURE: Found {len(errors)} differences:")
+        print(f"\nFAILURE: Found {len(errors)} differences:")
         for i, error in enumerate(errors, 1):
             print(f"  {i}. {error}")
         sys.exit(1)
